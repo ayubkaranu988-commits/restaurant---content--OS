@@ -1,0 +1,1367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Restaurant Content OS — Editable</title>
+<style>
+:root{--bg:#f6f7f5;--card:#fff;--ink:#171918;--muted:#6d736f;--line:#e5e7e4;--accent:#1f6f55}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Arial,sans-serif}button,input,textarea,select{font:inherit}
+.wrap{max-width:1150px;margin:auto;padding:24px 22px 70px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;gap:15px}.brand{font-weight:850;letter-spacing:-.03em}.topBtns{display:flex;gap:8px;flex-wrap:wrap}.badge{font-size:11px;border:1px solid var(--line);background:#fff;border-radius:20px;padding:7px 10px;color:var(--muted)}
+.hero{padding:22px 0 24px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--accent);text-transform:uppercase}.hero h1{font-size:42px;line-height:1.05;margin:9px 0}.hero p{max-width:760px;color:var(--muted);line-height:1.65}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.card,.approach,.tool,.heroBox{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}.card h3,.approach h3,.tool h3{margin:7px 0;font-size:19px}.card p,.approach p,.tool p{color:var(--muted);font-size:14px;line-height:1.55}.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 13px;cursor:pointer;font-weight:750}.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}.btn.green{background:var(--accent);color:#fff;border-color:var(--accent)}.btn.danger{color:#a52d2d}.back{border:0;background:none;padding:0;color:var(--muted);cursor:pointer;font-weight:700}.head{display:flex;justify-content:space-between;align-items:flex-end;margin:22px 0;gap:15px}.head h2{font-size:34px;margin:7px 0}.head p{color:var(--muted);max-width:760px}.approaches{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.tag{display:inline-block;font-size:10px;font-weight:850;letter-spacing:.08em;padding:6px 8px;border-radius:20px;background:#f0f3f0;color:var(--accent)}.buttons,.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.choicegrid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.urlbox{border-top:1px solid var(--line);margin-top:17px;padding-top:15px}.urlbox label,.field label{display:block;font-size:11px;font-weight:800;text-transform:uppercase;margin-bottom:7px}.urlbox input,.field input,.field textarea,.field select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#fff}.field textarea{min-height:120px;resize:vertical;line-height:1.5}.field{margin-bottom:14px}.field small{display:block;color:var(--muted);margin-top:5px}.editPanel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;margin:18px 0}.editPanel h3{margin-top:0}.editGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.wide{grid-column:1/-1}.sectionBar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:20px 0 12px}.sectionBar h3{margin:0}.mini{font-size:12px;color:var(--muted)}
+.pathIntro{margin:18px 0 10px}
+.pathIntro h3{margin:0 0 6px;font-size:20px}
+.pathIntro p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+.workflow{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.workflowCard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}
+.workflowCard.ai{border:2px solid var(--ink)}
+.workflowCard.canva{border:2px solid var(--line)}
+.workflowCard .pathNum{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#f0f3f0;font-weight:850;font-size:12px}
+.workflowCard h3{margin:12px 0 6px;font-size:20px}
+.workflowCard p{color:var(--muted);font-size:13px;line-height:1.5}
+.copyGroup{border-top:1px solid var(--line);margin-top:16px;padding-top:15px}
+.copyGroup label{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:850;text-transform:uppercase;margin-bottom:8px}
+.copyRow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.copySelect,.copyInput{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.copyBtn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;cursor:pointer;font-weight:750;white-space:nowrap}
+.selectedNote{margin-top:10px;padding:10px 12px;background:#f7f8f6;border-radius:10px;color:var(--muted);font-size:12px;line-height:1.45}
+.aiPromptBox{margin-top:16px;padding:14px;background:#f7f8f6;border:1px dashed #cfd5d1;border-radius:12px}
+.aiPromptBox strong{font-size:12px}
+.promptPreview{margin-top:7px;font-size:12px;color:var(--muted);line-height:1.5;max-height:92px;overflow:hidden;white-space:pre-wrap}
+.pathHint{font-size:11px;color:var(--muted);margin-top:8px}
+.createBox{background:#fff;border:2px solid var(--ink);border-radius:18px;padding:22px;margin-top:18px}
+.createHead h3{margin:0 0 4px;font-size:21px}
+.createHead p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+.methodSwitch{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:16px 0 4px;padding:5px;background:#f0f3f0;border-radius:14px}
+.methodBtn{border:0;background:transparent;border-radius:10px;padding:12px 10px;font-weight:800;font-size:14px;cursor:pointer;color:var(--muted)}
+.methodBtn.active{background:var(--ink);color:#fff}
+.section{border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:14px;background:#fcfcfb}
+.sectionTitle{font-size:11px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.section .copyGroup.first{border-top:0;margin-top:10px;padding-top:0}
+.methodPanel{margin-top:16px;padding-top:14px;border-top:1px dashed #cfd5d1}
+.promptHead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px}
+.dishHead{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:850;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.dishRow{display:grid;grid-template-columns:26px 1fr 140px 32px;gap:8px;align-items:center;margin-top:8px}
+.dishNum{width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.dishRow input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:14px;background:#fff;min-width:0}
+.miniX{border:1px solid var(--line);background:#fff;border-radius:8px;height:32px;cursor:pointer;color:var(--muted)}
+.miniX:hover{background:#fdecec;color:#b42318}
+@media(max-width:520px){.dishRow{grid-template-columns:26px 1fr 100px 28px}}
+.selSummary{margin:0 0 10px;padding:10px 12px;border-radius:10px;background:#eef7f0;border:1px solid #cfe5d4;font-size:13px;line-height:1.5}
+.selSummary span{display:block;font-size:11px;font-weight:850;letter-spacing:.08em;text-transform:uppercase;color:#2a7a45;margin-bottom:2px}
+.promptEditor{width:100%;min-height:300px;margin:4px 0 12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:13px;line-height:1.55;resize:vertical}
+.methodNote{margin:0 0 10px;color:var(--muted);font-size:13px;line-height:1.5}
+@media(max-width:520px){.methodSwitch{grid-template-columns:1fr}}
+@media(max-width:800px){.workflow{grid-template-columns:1fr}}
+.hidden{display:none}.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modal.show{display:flex}.modalbox{background:#fff;border-radius:18px;max-width:820px;width:100%;padding:22px;max-height:90vh;overflow:auto}.modalhead{display:flex;justify-content:space-between;align-items:start;gap:10px}.x{border:0;background:#eee;border-radius:50%;width:34px;height:34px;cursor:pointer}.modalbox textarea{width:100%;min-height:330px;padding:14px;border:1px solid var(--line);border-radius:12px;resize:vertical;line-height:1.5}.notice{padding:11px 13px;background:#f0f3f0;border-radius:10px;color:var(--muted);font-size:13px;margin-bottom:15px}
+@media(max-width:800px){.grid,.approaches,.choicegrid,.editGrid{grid-template-columns:1fr}.hero h1{font-size:34px}.head{align-items:start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">RESTAURANT CONTENT OS</div>
+    <div class="topBtns" id="topBtns">
+      <button class="btn" onclick="toggleEdit()">✏️ Edit dashboard</button>
+      <button class="btn" onclick="exportData()">Export</button>
+      <button class="btn" onclick="document.getElementById('importFile').click()">Import</button>
+      <input id="importFile" type="file" accept=".json" class="hidden" onchange="importData(event)">
+      <button class="btn" onclick="openRestoreModal()">Restore backup</button>
+      <div class="badge" id="modeBadge">Brand & Content System</div>
+    </div>
+    <div class="badge" id="clientBadge" style="display:none">Brand & Content System</div>
+  </div>
+  <div id="app"></div>
+</div>
+
+<div id="modal" class="modal">
+ <div class="modalbox">
+  <div class="modalhead"><div><div id="mtype" class="eyebrow"></div><h3 id="mtitle"></h3></div><button class="x" onclick="closeModal()">×</button></div>
+  <textarea id="mtext"></textarea>
+  <div class="row"><button class="btn green" onclick="copyPrompt()">Copy</button><button class="btn" onclick="closeModal()">Close</button></div>
+ </div>
+</div>
+
+<div id="restoreModal" class="modal">
+ <div class="modalbox">
+  <div class="modalhead"><div><div class="eyebrow">RECOVERY</div><h3>Restore a previous backup</h3></div><button class="x" onclick="closeRestoreModal()">×</button></div>
+  <div class="notice">This browser keeps a few automatic checkpoints of your data, taken each time this dashboard was opened, plus a downloaded JSON backup file every so often as you work. Restoring will replace what's currently on screen — it won't affect any exported files already on your computer.</div>
+  <div id="restoreList"></div>
+  <div class="row"><button class="btn" onclick="closeRestoreModal()">Close</button></div>
+ </div>
+</div>
+
+<script>
+const DEFAULT={
+categories:[
+{id:"products",name:"Products",description:"Promote the food, drinks and menu items customers can choose.",needsOfferFields:true,items:[
+{id:"todays-special",name:"Today's Special",description:"A common restaurant message with different ways to communicate the same special.",approaches:[]},
+{id:"customer-favourite",name:"Customer Favourite",description:"Position a dish as a trusted choice without inventing social proof.",approaches:[]},
+{id:"best-seller",name:"Best Seller",description:"Make a supported best-selling dish easier to notice and choose.",approaches:[]},
+{id:"new-menu-item",name:"New Menu Item",description:"Create curiosity around a newly introduced item.",approaches:[]}
+]},
+{id:"promotions",name:"Promotions",description:"Give customers a reason to buy, visit or act now.",needsOfferFields:true,items:[
+{id:"special-offer",name:"Special Offer",description:"Communicate a promotional offer clearly.",approaches:[]},
+{id:"combo-deal",name:"Combo Deal",description:"Show the value and convenience of a bundled order.",approaches:[]},
+{id:"limited-offer",name:"Limited Offer",description:"Use a real, supported time or quantity limit.",approaches:[]}
+]},
+{id:"information",name:"Information",description:"Give customers useful information they need before visiting or ordering.",items:[
+{id:"menu-information",name:"Menu Information",description:"Help customers understand available choices.",approaches:[]},
+{id:"location",name:"Location",description:"Help customers find and visit the restaurant.",approaches:[]},
+{id:"hours",name:"Opening Hours",description:"Make operating hours easy to understand.",approaches:[]}
+]},
+{id:"operations",name:"Operations",description:"Communicate availability, service and operational updates.",items:[
+{id:"were-open",name:"We're Open",description:"Communicate that the restaurant is currently open.",approaches:[]},
+{id:"closing-soon",name:"Closing Soon",description:"Give customers useful timing information.",approaches:[]},
+{id:"price-update",name:"Price Update",description:"Communicate a genuine menu or price change clearly.",approaches:[]}
+]},
+{id:"trust",name:"Trust & Social Proof",description:"Build confidence with real customer and brand evidence.",items:[
+{id:"customer-review",name:"Customer Review",description:"Turn a real customer comment into a clear trust message.",approaches:[]},
+{id:"behind-scenes",name:"Behind the Scenes",description:"Show the people and process behind the food.",approaches:[]},
+{id:"ugc",name:"Customer Content",description:"Use real customer-created content when permission is available.",approaches:[]}
+]},
+{id:"events",name:"Events",description:"Promote experiences, occasions and special restaurant events.",items:[
+{id:"live-music",name:"Live Music",description:"Promote an entertainment experience.",approaches:[]},
+{id:"game-night",name:"Game Night",description:"Promote a shared activity and social occasion.",approaches:[]},
+{id:"special-dinner",name:"Special Dinner",description:"Create interest around a special dining occasion.",approaches:[]}
+]}
+],
+approachGroups:[
+{name:"Desire",description:"Make the customer want the food or experience.",approaches:["Craving Trigger","Sensory Experience","Treat Yourself","Experience the Moment"]},
+{name:"Value",description:"Show why the choice is worth the money or effort.",approaches:["What You Get","Complete the Meal","Worth It","Smart Choice"]},
+{name:"Recommendation",description:"Help the customer decide what to choose.",approaches:["Our Pick","Start Here","Go-To Choice","Chef Recommends"]},
+{name:"Urgency",description:"Give a genuine reason to act now.",approaches:["Available Today","Act Now","Before It Ends","Last Chance"]},
+{name:"Exclusivity",description:"Make the item feel distinctive or special.",approaches:["Only Here","Signature Choice","Specially Made","For Those Who Know"]},
+{name:"Emotion",description:"Connect the message to a feeling, occasion or memory.",approaches:["Make Today Special","Comfort Food","Share the Moment","Feel-Good Choice"]}
+]
+};
+
+function seedApproaches(){
+  DEFAULT.categories.forEach(cat=>cat.items.forEach(item=>{
+    item.approaches=DEFAULT.approachGroups.map(g=>g.approaches.map((name)=>({
+      group:g.name,
+      name,
+      description:`Communicate ${item.name.toLowerCase()} through the ${g.name.toLowerCase()} angle.`,
+      designHeadlines:[
+        `${name}`,
+        `Discover the Favourite`,
+        `Your Next Favourite`,
+        `Crave It Today`,
+        `Make It Your Choice`
+      ],
+      captionHeadlines:[
+        `${name}`,
+        `A Favourite Worth Trying`,
+        `Your Next Favourite`,
+        `Something Delicious Awaits`,
+        `At ${item.name}`
+      ],
+      designCtas:["Order now","Visit us today","Try it today","Get yours today","Explore the menu"],
+      captionCtas:["Order now","Visit us today","Try it today","Get yours today","Explore the menu"],
+      designPrompt:`Create a branded restaurant social-media design for "${item.name}" using the "${name}" approach under "${g.name}". Use the uploaded food/design as the source of truth. Keep the food as the focal point, use approved brand assets, strong hierarchy, clean spacing, mobile readability and a clear CTA. Never invent prices, ingredients, reviews, ratings, offers or scarcity.
+
+DESIGN COPY TO USE:
+- Exact headline: "{{designHeadline}}"
+- Exact CTA: "{{designCTA}}"
+
+Place the exact headline prominently in the main headline area. Place the exact CTA in a clear secondary action area. Do not rewrite, shorten, paraphrase or invent either selected text.`,
+      captionPrompt:`Write a friendly Instagram/Facebook caption for "${item.name}" using the "${name}" approach under "${g.name}". Inspect the uploaded design first. Use only visible or provided facts. Do not invent ingredients, prices, reviews, ratings, numbers, offers or scarcity.
+
+CAPTION COPY TO USE:
+- Opening headline/line: "{{captionHeadline}}"
+- CTA: "{{captionCTA}}"
+
+Use the selected headline naturally as the opening line or hook. Keep the caption realistic and concise (1–2 short paragraphs), include only supported restaurant information, then finish with the selected CTA. Add 3–5 relevant hashtags only if appropriate. Do not create facts that are not visible or provided.`,
+      // Backward-compatible fields for older dashboard data
+      headlines:[name],
+      ctas:["Order now","Visit us today","Try it today"]
+    })));
+  }));
+}
+seedApproaches();
+
+// ---- Cloud database (Supabase) ----
+// Each restaurant has its own row, identified by a "slug" in the page URL,
+// e.g. index.html?r=mamas-kitchen . No slug in the URL falls back to "default",
+// which is handy for testing the template itself before handing out real links.
+const SUPABASE_URL="https://nswgqbonxzjcfdbheuov.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zd2dxYm9ueHpqY2ZkYmhldW92Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNjgzMzksImV4cCI6MjEwNTk0NDMzOX0.GhRUDWZeSatsg0ijNWQicTrFkKy37h7LStDVabvSUys";
+const SLUG=(new URLSearchParams(location.search).get("r")||"default").trim().toLowerCase().replace(/[^a-z0-9-]/g,"-").slice(0,80)||"default";
+// Only links that include &admin=1 AND the correct passcode show editing controls. Plain client links
+// (just ?r=slug) show a clean, read-only-structure dashboard — nothing to
+// accidentally break, no Export/Import/Restore buttons to be confused by.
+function sha256(ascii){
+  function rightRotate(value,amount){return (value>>>amount)|(value<<(32-amount));}
+  var mathPow=Math.pow,maxWord=mathPow(2,32),lengthProperty='length',i,j,result='';
+  var words=[],asciiBitLength=ascii[lengthProperty]*8;
+  var hash=[],k=[],primeCounter=0,isComposite={};
+  for(var candidate=2;primeCounter<64;candidate++){
+    if(!isComposite[candidate]){
+      for(i=0;i<313;i+=candidate){isComposite[i]=candidate;}
+      hash[primeCounter]=(mathPow(candidate,.5)*maxWord)|0;
+      k[primeCounter++]=(mathPow(candidate,1/3)*maxWord)|0;
+    }
+  }
+  ascii+='\x80';
+  while(ascii[lengthProperty]%64-56) ascii+='\x00';
+  for(i=0;i<ascii[lengthProperty];i++){
+    j=ascii.charCodeAt(i);
+    if(j>>8) return '';
+    words[i>>2]|=j<<((3-i)%4)*8;
+  }
+  words[words[lengthProperty]]=((asciiBitLength/maxWord)|0);
+  words[words[lengthProperty]]=(asciiBitLength);
+  for(j=0;j<words[lengthProperty];){
+    var w=words.slice(j,j+=16);
+    var oldHash=hash;
+    hash=hash.slice(0,8);
+    for(i=0;i<64;i++){
+      var w15=w[i-15],w2=w[i-2];
+      var a=hash[0],e=hash[4];
+      var temp1=hash[7]+(rightRotate(e,6)^rightRotate(e,11)^rightRotate(e,25))+((e&hash[5])^((~e)&hash[6]))+k[i]+(w[i]=(i<16)?w[i]:(w[i-16]+(rightRotate(w15,7)^rightRotate(w15,18)^(w15>>>3))+w[i-7]+(rightRotate(w2,17)^rightRotate(w2,19)^(w2>>>10)))|0);
+      var temp2=(rightRotate(a,2)^rightRotate(a,13)^rightRotate(a,22))+((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+      hash=[(temp1+temp2)|0].concat(hash);
+      hash[4]=(hash[4]+temp1)|0;
+    }
+    for(i=0;i<8;i++){hash[i]=(hash[i]+oldHash[i])|0;}
+  }
+  for(i=0;i<8;i++){for(j=3;j+1;j--){var b=(hash[i]>>(j*8))&255;result+=((b<16)?0:'')+b.toString(16);}}
+  return result;
+}
+const ADMIN_HASH="b2aaf8f1d2bb60e9c20f94ce6cf58d13117903f5f72cb7620158a9b2ba9bd6ad";
+const IS_ADMIN=(function(){
+  if(new URLSearchParams(location.search).get("admin")!=="1") return false;
+  const key="ros_admin_ok:"+ADMIN_HASH;
+  try{ if(sessionStorage.getItem(key)==="1") return true; }catch(e){}
+  const pw=window.prompt("Admin passcode:");
+  if(pw && sha256(unescape(encodeURIComponent(pw)))===ADMIN_HASH){
+    try{ sessionStorage.setItem(key,"1"); }catch(e){}
+    return true;
+  }
+  return false;
+})();
+
+// Local-storage keys are scoped per restaurant slug, so opening several
+// different restaurants' links in the same browser (as you will, while
+// setting each one up) never mixes up their cached data.
+const STORAGE_KEY="restaurantOSData_v2:"+SLUG;
+const LEGACY_STORAGE_KEY="restaurantOSData:"+SLUG;
+const HISTORY_KEY="restaurantOSData_v2_history:"+SLUG;
+const MAX_HISTORY=3;
+
+// One-time cleanup: local storage fills up fast once several restaurant
+// slugs have been tested in the same browser, since each kept its own
+// backup history. Free up space from OTHER slugs (never the current one)
+// so quota problems don't keep recurring as more restaurants get set up.
+(function cleanupOtherSlugsHistory(){
+  try{
+    const keep=HISTORY_KEY;
+    const toRemove=[];
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k && k.startsWith("restaurantOSData_v2_history:") && k!==keep) toRemove.push(k);
+    }
+    toRemove.forEach(k=>localStorage.removeItem(k));
+  }catch(e){}
+})();
+
+async function fetchRemoteData(){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/dashboards?slug=eq.${encodeURIComponent(SLUG)}&select=data`,{
+    headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`}
+  });
+  if(!res.ok) throw new Error("Supabase fetch failed: "+res.status);
+  const rows=await res.json();
+  return (rows && rows.length && rows[0].data) ? rows[0].data : null;
+}
+
+let remoteSaveTimer=null,remoteSaveInFlight=false,remoteSavePending=false;
+function setSyncStatus(state){
+  const badge=$("modeBadge");
+  if(!badge || !editing) return;
+  if(state==="pending") badge.textContent="EDIT MODE — saving to cloud…";
+  else if(state==="saved") badge.textContent="EDIT MODE — saved to cloud ✓";
+  else if(state==="offline") badge.textContent="EDIT MODE — saved locally, will retry cloud sync";
+}
+function scheduleRemoteSave(){
+  if(!IS_ADMIN) return;
+  setSyncStatus("pending");
+  clearTimeout(remoteSaveTimer);
+  remoteSaveTimer=setTimeout(pushRemoteData,1000);
+}
+async function pushRemoteData(){
+  if(!IS_ADMIN) return;
+  if(remoteSaveInFlight){remoteSavePending=true;return;}
+  remoteSaveInFlight=true;
+  try{
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/dashboards`,{
+      method:"POST",
+      headers:{
+        apikey:SUPABASE_ANON_KEY,
+        Authorization:`Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type":"application/json",
+        Prefer:"resolution=merge-duplicates,return=minimal"
+      },
+      body:JSON.stringify({slug:SLUG,data:DATA,updated_at:new Date().toISOString()})
+    });
+    if(!res.ok) throw new Error("Supabase save failed: "+res.status);
+    setSyncStatus("saved");
+  }catch(e){
+    console.warn("Cloud save failed, will retry on next edit:",e);
+    setSyncStatus("offline");
+  }finally{
+    remoteSaveInFlight=false;
+    if(remoteSavePending){remoteSavePending=false;scheduleRemoteSave();}
+  }
+}
+
+// Keeps a small rotating log of past states in localStorage, separate from the
+// live save, so an accidental overwrite or a bad edit can still be recovered from.
+function pushHistorySnapshot(rawJson){
+  if(!rawJson) return;
+  try{
+    const list=JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]");
+    if(list.length && list[list.length-1].data===rawJson) return; // no real change, skip
+    list.push({ts:Date.now(),data:rawJson});
+    while(list.length>MAX_HISTORY) list.shift();
+    localStorage.setItem(HISTORY_KEY,JSON.stringify(list));
+  }catch(e){
+    // Likely local storage quota exceeded (common once several restaurant
+    // slugs have been tested in the same browser). Drop down to keeping just
+    // the single latest checkpoint instead of failing the whole thing.
+    try{ localStorage.setItem(HISTORY_KEY,JSON.stringify([{ts:Date.now(),data:rawJson}])); }catch(e2){}
+  }
+}
+function getHistorySnapshots(){
+  try{ return JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]"); }catch(e){ return []; }
+}
+function fmtTs(ts){
+  try{ return new Date(ts).toLocaleString(); }catch(e){ return String(ts); }
+}
+function openRestoreModal(){
+  const snaps=getHistorySnapshots().slice().reverse();
+  const list=$("restoreList");
+  if(!snaps.length){
+    list.innerHTML=`<p style="color:var(--muted);font-size:13px">No automatic checkpoints yet. One is saved each time this dashboard is opened, so check back after your next visit.</p>`;
+  }else{
+    list.innerHTML=snaps.map((s,i)=>{
+      const realIdx=getHistorySnapshots().length-1-i;
+      return `<div class="row" style="justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:10px;margin-top:10px">
+        <span style="font-size:13px">${esc(fmtTs(s.ts))}</span>
+        <button class="btn" onclick="restoreSnapshot(${realIdx})">Restore this version</button>
+      </div>`;
+    }).join("");
+  }
+  $("restoreModal").classList.add("show");
+}
+function closeRestoreModal(){$("restoreModal").classList.remove("show")}
+function restoreSnapshot(idx){
+  const snaps=getHistorySnapshots();
+  const snap=snaps[idx];
+  if(!snap) return;
+  if(!confirm("Replace what's currently on screen with this backup from "+fmtTs(snap.ts)+"? This can't be undone.")) return;
+  try{
+    const data=migrateData(JSON.parse(snap.data));
+    if(!data) throw Error();
+    DATA=data;
+    save();
+    closeRestoreModal();
+    home();
+    alert("Dashboard restored from backup.");
+  }catch(e){
+    alert("That backup couldn't be read.");
+  }
+}
+
+// Downloads an actual .json file to the user's computer every so often while they
+// work, as a copy that survives even if this browser's storage is ever cleared.
+let lastAutoBackupAt=0;
+const AUTO_BACKUP_INTERVAL_MS=5*60*1000; // at most once every 5 minutes
+function maybeAutoDownloadBackup(){
+  const now=Date.now();
+  if(now-lastAutoBackupAt<AUTO_BACKUP_INTERVAL_MS) return;
+  lastAutoBackupAt=now;
+  try{
+    const blob=new Blob([JSON.stringify(DATA,null,2)],{type:"application/json"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    const stamp=new Date().toISOString().replace(/[:.]/g,"-");
+    a.href=url;a.download=`restaurant-content-os-autobackup-${stamp}.json`;a.click();
+    URL.revokeObjectURL(url);
+  }catch(e){}
+}
+
+function migrateData(data){
+  if(!data || !Array.isArray(data.categories)) return null;
+  data.categories.forEach(cat=>{
+    if(cat.needsOfferFields===undefined) cat.needsOfferFields=(cat.id==="products"||cat.id==="promotions");
+    (cat.items||[]).forEach(item=>{
+    if(!item.liveOffer || typeof item.liveOffer!=="object") item.liveOffer={itemName:"",price:"",offer:""};
+    if(!Array.isArray(item.approaches)) item.approaches=makeApproachesFallback(cat.name,item.name);
+    item.approaches.forEach(group=>(group||[]).forEach(a=>{
+      if(!a) return;
+      a.designHeadlines=Array.isArray(a.designHeadlines)&&a.designHeadlines.length ? a.designHeadlines : (Array.isArray(a.headlines)&&a.headlines.length ? a.headlines : [a.name||"Headline"]);
+      a.captionHeadlines=Array.isArray(a.captionHeadlines)&&a.captionHeadlines.length ? a.captionHeadlines : [...a.designHeadlines];
+      a.designCtas=Array.isArray(a.designCtas)&&a.designCtas.length ? a.designCtas : (Array.isArray(a.ctas)&&a.ctas.length ? a.ctas : ["Order now","Visit us today","Try it today"]);
+      a.captionCtas=Array.isArray(a.captionCtas)&&a.captionCtas.length ? a.captionCtas : [...a.designCtas];
+      a.headlines=a.designHeadlines;
+      a.ctas=a.designCtas;
+      a.selectedDesignHeadline=a.selectedDesignHeadline||a.designHeadlines[0];
+      a.selectedDesignCTA=a.selectedDesignCTA||a.designCtas[0];
+      a.selectedCaptionHeadline=a.selectedCaptionHeadline||a.captionHeadlines[0];
+      a.selectedCaptionCTA=a.selectedCaptionCTA||a.captionCtas[0];
+    }));
+  });});
+  return data;
+}
+function makeApproachesFallback(cat,item){
+  return DEFAULT.approachGroups.map(g=>g.approaches.map(name=>({
+    group:g.name,name,
+    description:`Communicate ${item.toLowerCase()} through the ${g.name.toLowerCase()} angle.`,
+    designHeadlines:[name,"Discover the Favourite","Your Next Favourite","Crave It Today","Make It Your Choice"],
+    captionHeadlines:[name,"A Favourite Worth Trying","Your Next Favourite","Something Delicious Awaits",`At ${item}`],
+    designCtas:["Order now","Visit us today","Try it today","Get yours today","Explore the menu"],
+    captionCtas:["Order now","Visit us today","Try it today","Get yours today","Explore the menu"],
+    designPrompt:`Create a branded restaurant social-media design for "${item}" using the "${name}" approach under "${g.name}". Use the uploaded food/design as the source of truth. Keep the food as the focal point, use approved brand assets, strong hierarchy, clean spacing, mobile readability and a clear CTA. Never invent prices, ingredients, reviews, ratings, offers or scarcity.
+
+DESIGN COPY TO USE:
+- Exact headline: "{{designHeadline}}"
+- Exact CTA: "{{designCTA}}"
+
+Place the exact headline prominently in the main headline area. Place the exact CTA in a clear secondary action area. Do not rewrite, shorten, paraphrase or invent either selected text.`,
+    captionPrompt:`Write a friendly Instagram/Facebook caption for "${item}" using the "${name}" approach under "${g.name}". Inspect the uploaded design first. Use only visible or provided facts. Do not invent ingredients, prices, reviews, ratings, numbers, offers or scarcity.
+
+CAPTION COPY TO USE:
+- Opening headline/line: "{{captionHeadline}}"
+- CTA: "{{captionCTA}}"
+
+Use the selected headline naturally as the opening line or hook. Keep the caption realistic and concise (1–2 short paragraphs), include only supported restaurant information, then finish with the selected CTA. Add 3–5 relevant hashtags only if appropriate. Do not create facts that are not visible or provided.`,
+    headlines:[name],ctas:["Order now","Visit us today","Try it today"]
+  })));
+}
+// Local storage is now just a fast, offline-friendly CACHE of the last known
+// state for this browser — the cloud database (Supabase) is the source of
+// truth that lets a restaurant's data follow them across devices/browsers.
+function loadLocalCache(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
+    if(raw) pushHistorySnapshot(raw); // checkpoint the state as it was before this session's edits
+    return migrateData(raw ? JSON.parse(raw) : null) || DEFAULT;
+  }catch(err){
+    console.warn("Local cache could not be read:",err);
+    return DEFAULT;
+  }
+}
+let DATA=DEFAULT;
+let editing=false,current={cat:null,item:null,group:null,approach:null};
+const $=id=>document.getElementById(id);
+if(!IS_ADMIN){
+  const tb=$("topBtns"),cb=$("clientBadge");
+  if(tb) tb.style.display="none";
+  if(cb) cb.style.display="";
+}
+const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const escJs=s=>String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/\n/g,"\\n");
+function save(){
+  if(!IS_ADMIN) return true; // clients never write anything: no local cache, no backups, no cloud
+  // Local storage is best-effort only — if it fails (e.g. quota exceeded from
+  // testing many restaurant slugs in one browser), that must NEVER block the
+  // real save, which is the cloud sync below.
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA));
+    localStorage.setItem(LEGACY_STORAGE_KEY,JSON.stringify(DATA));
+    maybeAutoDownloadBackup();
+  }catch(err){
+    console.warn("Local cache write failed (this is not the cloud save, so your data is still safe):",err);
+  }
+  scheduleRemoteSave(); // always attempt the real, cloud save
+  return true;
+}
+
+// ---- Information & Operations: fact fields, short approach lists, exact-facts prompts ----
+const FACTS={
+ hours:{f:[["days","Days and times","Mon–Fri 8am–10pm\nSat–Sun 9am–11pm",3],["note","Special note (optional)","Closed on public holidays"],["phone","Phone","0712 345 678"]]},
+ location:{f:[["address","Address","Ngong Road, Nairobi"],["landmark","Landmark or directions (optional)","Opposite the petrol station, 2nd floor"],["parking","Parking note (optional)","Free parking at the back"],["phone","Phone","0712 345 678"]]},
+ "menu-information":{f:[["section","Menu section","Breakfast"],["items","Items and prices (one per line)","Chapati and eggs – KES 250\nMasala tea – KES 100",5],["times","Serving times (optional)","Served 7am–11am"]]},
+ "were-open":{f:[["opens","Opens at","8am"],["closes","Closes at","10pm"],["phone","Phone","0712 345 678"],["note","Note (optional)","Kitchen open till 9pm"]]},
+ "closing-soon":{f:[["closes","Closing time today","9pm"],["last","Last orders (optional)","8:30pm"],["avail","Still available (optional)","Grills and drinks"]]},
+ "price-update":{f:[["items","Dish, old price, new price (one per line)","Chicken Biryani – KES 700 → KES 750",5],["date","Effective from","1 November"],["note","Note (optional)","Prices include VAT"]]}
+};
+const INFO={
+ hours:{h:["Our Opening Hours","Plan Your Visit","We're Open Every Day","Come See Us","Open When You Are"],c:["Visit us today","Call to reserve","Plan your visit","See you soon"],a:[["Quick Glance","Big, simple hours in a clean two-column list. Best when the times are the whole message.","CLEAR","hours in a large two-column list"],["Plan Your Visit","Warm layout with a soft food photo behind the hours. Best for new customers.","INVITING","hours list over a softly darkened food photo"],["Holiday or Change","A bold notice above the changed hours. Best for holiday or one-off changes.","TIMELY","a bold notice banner above the changed hours"]]},
+ location:{h:["Find Us Here","Easy to Find","Come Visit Us","We're Right Here","Your Table Is Waiting"],c:["Get directions","Call us","Visit us today","Come see us"],a:[["Find Us","Address in large type with a simple pin graphic. Best for the basics.","CLEAR","address in large type with a simple pin icon"],["Easy to Find","Landmark and directions first. Best when the place is hard to spot.","HELPFUL","landmark and directions lead, address below"],["Come Visit","Food photo with the address underneath. Best for attracting new visitors.","INVITING","food photo with the address and phone underneath"]]},
+ "menu-information":{h:["On the Menu","Know Before You Order","Today's Menu","What We're Serving","Pick Your Plate"],c:["Order now","Visit us today","Explore the menu","Call to order"],a:[["Quick Menu","A short, scannable list. Best for a few items.","CLEAR","a short two-column item and price list"],["Know Before You Order","Items, prices and serving times together. Best for meal-time menus.","HELPFUL","items, prices and serving times in one tidy block"],["Full Section","One full menu section with a hero photo. Best for breakfast or drinks menus.","DETAILED","one menu section with up to 6 items and a hero photo"]]},
+ "were-open":{h:["We're Open","Doors Are Open","Open Now","Come On In","Open Late Tonight"],c:["Visit us today","Order now","Call to reserve","Come on in"],a:[["Open Now","Direct and bold. Best for same-day announcements.","TIMELY","a bold open-now message with the hours"],["Doors Are Open","Welcoming layout with a food photo. Best for reopenings and weekends.","INVITING","a welcoming layout with a soft food photo"],["Open Late","Evening mood with hours. Best for late-night service.","TIMELY","an evening-toned layout with the closing time prominent"]]},
+ "closing-soon":{h:["Closing Soon","Before We Close","Last Orders","Closing Early Today","Come Before We Close"],c:["Order now","Come in today","Call us","Visit us today"],a:[["Before We Close","Closing time stated clearly. Best for same-day reminders.","TIMELY","the closing time in large type"],["Last Orders","Last order time first. Best for kitchens that stop early.","TIMELY","the last order time first, closing time second"],["Closing Early Today","A clear notice of an early close. Best for one-off changes.","NOTICE","a clear notice banner with the new closing time"]]},
+ "price-update":{h:["New Prices","Price Update","Updated Menu Prices","A Quick Price Update","Our New Prices"],c:["See the menu","Visit us today","Call us","Order now"],a:[["Updated Prices","Old and new prices side by side. Best for several dishes.","CLEAR","a table with dish, old price struck through, and new price"],["Price Change Notice","A short, polite notice with the effective date. Best for a general update.","NOTICE","a calm notice with the effective date and the new prices"]]}
+};
+function applyInfoFormats(){
+ DATA.categories.forEach(c=>c.items.forEach(it=>{
+  const S=INFO[it.id]; if(!S) return;
+  if(!Array.isArray(it.approaches)||it.approaches.length!==DATA.approachGroups.length) it.approaches=makeApproaches(c.name,it.name);
+  if(it.approaches[0]&&it.approaches[0][0]&&it.approaches[0][0].infoSet) return;
+  it.approaches[0]=S.a.map(([n,d,t,lay])=>({group:"Information",infoSet:true,tagline:t,name:n,description:d,
+   designHeadlines:[...S.h],captionHeadlines:[...S.h],designCtas:[...S.c],captionCtas:[...S.c],headlines:[...S.h],ctas:[...S.c],
+   designPrompt:`Create a clean, branded restaurant social-media design for "${it.name}" using the "${n}" approach: ${lay}. Use the approved brand assets (logo, colours, fonts). If a food photo is provided, use it only as a subtle background. Layout order: headline, key facts, contact or CTA, logo. Use large, high-contrast, mobile-readable text with generous spacing and no more than 6 lines of facts. Never invent times, prices, addresses, contact details, offers or scarcity.\n\nDESIGN COPY TO USE:\n- Exact headline: "{{designHeadline}}"\n- Exact CTA: "{{designCTA}}"\n\nPlace the exact headline prominently and the exact CTA in a clear action area. Do not rewrite either.`,
+   captionPrompt:`Write a short, friendly Instagram/Facebook caption for "${it.name}" using the "${n}" approach. Start with the hook, then state the key facts exactly as provided, then finish with the CTA. Keep it under 60 words, use 1–2 emojis and 3–4 relevant hashtags. Never invent times, prices, addresses, contact details or offers.\n\nCAPTION COPY TO USE:\n- Opening hook: "{{captionHeadline}}"\n- CTA: "{{captionCTA}}"`}));
+ }));
+}
+// Facts live in this browser only (never in the cloud data), so owners don't retype them each visit.
+const FKEY="ros_facts:"+SLUG, SHARED=["phone","address","landmark"];
+function loadFacts(){try{return JSON.parse(localStorage.getItem(FKEY)||"{}")}catch(e){return {}}}
+function getFact(id,k){const s=loadFacts();return (SHARED.includes(k)?(s._shared||{})[k]:(s[id]||{})[k])||""}
+function setFact(id,k,v){const s=loadFacts();if(SHARED.includes(k)){(s._shared=s._shared||{})[k]=v}else{(s[id]=s[id]||{})[k]=v}try{localStorage.setItem(FKEY,JSON.stringify(s))}catch(e){}updatePromptPreview();}
+function factsPanelHTML(it){
+ const F=FACTS[it.id]; if(!F) return "";
+ return `<div class="pathIntro" style="border:1px solid var(--line);background:var(--bg2,#f7f7f5)"><h3>Facts for this post</h3><p style="margin-bottom:10px">Type the real details. The design and caption copy them exactly, and they're remembered on this device.</p>
+ ${F.f.map(([k,l,ph,rows])=>`<div class="field" style="margin-top:10px"><label>${esc(l)}</label>${rows?`<textarea rows="${rows}" placeholder="${esc(ph)}" oninput="setFact('${it.id}','${k}',this.value)">${esc(getFact(it.id,k))}</textarea>`:`<input value="${esc(getFact(it.id,k))}" placeholder="${esc(ph)}" oninput="setFact('${it.id}','${k}',this.value)">`}</div>`).join("")}
+ <div class="notice" style="margin-top:12px"><b>Before posting:</b> check every time, price, address and phone number on the finished design.</div></div>`;
+}
+function factsBlock(){
+ const c=DATA.categories[current.cat],it=c&&c.items[current.item],F=it&&FACTS[it.id]; if(!F) return "";
+ const L=[]; F.f.forEach(([k,l])=>{const v=getFact(it.id,k).trim(); if(v) L.push(v.includes("\n")?`- ${l}:\n`+v.split("\n").filter(x=>x.trim()).map(x=>`  • ${x.trim()}`).join("\n"):`- ${l}: "${v}"`)});
+ return "\n\nFACTS TO USE EXACTLY:\n"+(L.length?L.join("\n"):"- (No facts entered yet. Leave clear blank spaces for them and do not invent any.)")+"\n- Copy every time, price, address and phone number exactly as written. Do not reword, round, translate or add details.";
+}
+const _bp=buildPromptFor,_cp=buildCaptionPrompt;
+buildPromptFor=function(m){const f=factsBlock();return _bp(m)+(f?f+"\n- After creating the design, list every time, price, address and phone number you used so I can check them.":"")};
+buildCaptionPrompt=function(){return _cp()+factsBlock()};
+function openInfoItem(ci,ii){
+ const c=DATA.categories[ci],it=c.items[ii],list=it.approaches[0]||[];
+ $("app").innerHTML=`<button class="back" onclick="openCat(${ci})">← Back to ${esc(c.name)}</button>
+ <div class="head"><div><div class="eyebrow">${esc(c.name)} / ${esc(it.name)}</div><h2>${esc(it.name)}</h2><p>${esc(it.description)}</p></div></div>
+ <div class="heroBox"><h3>Pick a style for ${esc(it.name)}</h3><p>You'll enter the facts on the next page. The design and caption copy them exactly.</p></div>
+ <div class="approaches">${list.map((a,ai)=>`<div class="approach"><span class="tag">${esc(a.tagline||"")}</span><h3>${esc(a.name)}</h3><p>${esc(a.description)}</p><div class="buttons"><button class="btn primary" onclick="openApproach(${ci},${ii},0,${ai})">Open approach →</button></div></div>`).join("")}</div>`;
+}
+
+async function initApp(){
+  $("app").innerHTML=`<div class="hero"><p style="color:var(--muted)">Loading your dashboard…</p></div>`;
+  try{
+    const remote=await fetchRemoteData();
+    if(remote){
+      DATA=migrateData(remote)||DEFAULT;
+      // Everything below is local-storage housekeeping only — best-effort,
+      // and must never be allowed to discard the cloud data we just loaded.
+      try{
+        pushHistorySnapshot(JSON.stringify(remote));
+        localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA));
+      }catch(cacheErr){
+        console.warn("Local cache housekeeping failed (cloud data is unaffected):",cacheErr);
+      }
+    }else{
+      // Nothing saved in the cloud yet for this restaurant's link — start
+      // from this browser's cache if it has one, else the blank template,
+      // then create the cloud row right away.
+      DATA=loadLocalCache();
+      scheduleRemoteSave();
+    }
+  }catch(e){
+    console.warn("Could not reach the cloud database — using this browser's last saved copy instead:",e);
+    DATA=loadLocalCache();
+    setSyncStatus("offline");
+  }
+  applyInfoFormats();
+  home();
+}
+
+function home(){
+ current={cat:null,item:null,group:null,approach:null};
+ $("app").innerHTML=`<div class="hero"><div class="eyebrow">Content workflow</div><h1>Choose what you want to communicate.</h1><p>Choose a message category → content format → communication category → one of four approaches. ${IS_ADMIN?"Everything in this dashboard can be edited, and it saves automatically.":""}</p></div>
+ <div class="grid">${DATA.categories.map((c,i)=>`<div class="card"><div class="tag">${esc(c.name)}</div><h3>${esc(c.name)}</h3><p>${esc(c.description)}</p><button class="btn primary" onclick="openCat(${i})">Open ${esc(c.name)} →</button></div>`).join("")}</div>`;
+ if(editing) renderEditHome();
+}
+function renderEditHome(){
+ $("app").insertAdjacentHTML("beforeend",`<div class="editPanel"><h3>Edit dashboard structure</h3><div class="notice">Rename categories, descriptions and content formats. Add or remove categories/items. Changes are saved automatically.</div>
+ ${DATA.categories.map((c,i)=>`<div class="editPanel" style="margin:12px 0"><div class="editGrid">
+ <div class="field"><label>Category name</label><input value="${esc(c.name)}" oninput="DATA.categories[${i}].name=this.value;save()" onchange="editCat(${i},'name',this.value)"></div>
+ <div class="field"><label>Category ID</label><input value="${esc(c.id)}" oninput="DATA.categories[${i}].id=this.value;save()" onchange="editCat(${i},'id',this.value)"></div>
+ <div class="field wide"><label>Description</label><textarea oninput="DATA.categories[${i}].description=this.value;save()" onchange="editCat(${i},'description',this.value)">${esc(c.description)}</textarea></div>
+ <div class="field wide"><label><input type="checkbox" ${c.needsOfferFields?"checked":""} onchange="DATA.categories[${i}].needsOfferFields=this.checked;save();home()" style="width:auto;margin-right:8px"> This category needs Item name / Price / Offer fields (for Products, Promotions, or similar)</label></div>
+ </div>
+ <div class="sectionBar"><h3>Content formats</h3><button class="btn" onclick="addItem(${i})">+ Add format</button></div>
+ ${c.items.map((it,j)=>`<div class="editGrid" style="border-top:1px solid var(--line);padding-top:12px;margin-top:12px">
+ <div class="field"><label>Format name</label><input value="${esc(it.name)}" oninput="DATA.categories[${i}].items[${j}].name=this.value;save()" onchange="editItem(${i},${j},'name',this.value)"></div>
+ <div class="field"><label>Format ID</label><input value="${esc(it.id)}" oninput="DATA.categories[${i}].items[${j}].id=this.value;save()" onchange="editItem(${i},${j},'id',this.value)"></div>
+ <div class="field wide"><label>Description</label><textarea oninput="DATA.categories[${i}].items[${j}].description=this.value;save()" onchange="editItem(${i},${j},'description',this.value)">${esc(it.description)}</textarea></div>
+ <div><button class="btn danger" onclick="deleteItem(${i},${j})">Delete format</button></div>
+ </div>`).join("")}
+ <div class="row"><button class="btn danger" onclick="deleteCat(${i})">Delete category</button></div>
+ </div>`).join("")}
+ <button class="btn green" onclick="addCategory()">+ Add category</button></div>`);
+}
+function editCat(i,k,v){DATA.categories[i][k]=v;save();home()}
+function editItem(i,j,k,v){DATA.categories[i].items[j][k]=v;save();home()}
+function addCategory(){DATA.categories.push({id:"new-category-"+Date.now(),name:"New Category",description:"Edit this category description.",items:[]});save();home()}
+function addItem(i){DATA.categories[i].items.push({id:"new-item-"+Date.now(),name:"New Content Format",description:"Edit this format description.",approaches:makeApproaches(DATA.categories[i].name,"New Content Format")});save();home()}
+function makeApproaches(cat,item){
+ return DATA.approachGroups.map(g=>g.approaches.map(name=>({group:g.name,name,description:`Communicate ${item.toLowerCase()} through the ${g.name.toLowerCase()} angle.`,headlines:[name],designPrompt:`Create a branded restaurant social-media design for "${item}" using the "${name}" approach under "${g.name}". Use the uploaded food/design as the source of truth. Use this exact headline: "{{headline}}". Use this exact CTA: "{{cta}}".`,captionPrompt:`Write a friendly restaurant caption for "${item}" using the "${name}" approach under "${g.name}".`,ctas:["Order now","Visit us today","Try it today"]})));
+}
+function deleteCat(i){if(confirm("Delete this category and all its formats?")){DATA.categories.splice(i,1);save();home()}}
+function deleteItem(i,j){if(confirm("Delete this content format?")){DATA.categories[i].items.splice(j,1);save();home()}}
+
+function openCat(i){
+ current.cat=i;
+ const c=DATA.categories[i];
+ $("app").innerHTML=`<button class="back" onclick="home()">← Back to categories</button>
+ <div class="head"><div><div class="eyebrow">${esc(c.name)}</div><h2>${esc(c.name)}</h2><p>${esc(c.description)}</p></div>${IS_ADMIN?`<button class="btn" onclick="editCategoryPage(${i})">✏️ Edit category</button>`:""}</div>
+ <div class="approaches">${c.items.map((it,j)=>`<div class="approach"><div class="tag">${esc(it.name)}</div><h3>${esc(it.name)}</h3><p>${esc(it.description)}</p><button class="btn primary" onclick="openItem(${i},${j})">Ways to communicate →</button></div>`).join("")}</div>`;
+ if(editing) $("app").insertAdjacentHTML("beforeend",`<div class="editPanel"><h3>Add content format</h3><button class="btn green" onclick="addItem(${i})">+ Add format</button></div>`);
+}
+function editCategoryPage(i){toggleEdit(true);home();}
+
+function openItem(ci,ii){
+ current.cat=ci;current.item=ii;
+ const c=DATA.categories[ci],it=c.items[ii];
+ if(FACTS[it.id]){openInfoItem(ci,ii);return;}
+ // Ensure every item has six groups × four approaches
+ if(!it.approaches||it.approaches.length!==DATA.approachGroups.length) it.approaches=makeApproaches(c.name,it.name);
+ if(!it.liveOffer||typeof it.liveOffer!=="object") it.liveOffer={itemName:"",price:"",offer:""};
+ $("app").innerHTML=`<button class="back" onclick="openCat(${ci})">← Back to ${esc(c.name)}</button>
+ <div class="head"><div><div class="eyebrow">${esc(c.name)} / ${esc(it.name)}</div><h2>${esc(it.name)}</h2><p>${esc(it.description)}</p></div>${IS_ADMIN?`<button class="btn" onclick="editItemPage(${ci},${ii})">✏️ Edit content</button>`:""}</div>
+ <div class="heroBox"><h3>Different ways to communicate ${esc(it.name)}</h3><p>The message stays the same. The communication angle changes. Each category below contains exactly four editable approaches.</p></div>
+ ${DATA.approachGroups.map((g,gi)=>`<div class="sectionBar"><div><h3>${esc(g.name)}</h3><div class="mini">${esc(g.description)}</div></div><span class="tag">4 approaches</span></div>
+ <div class="approaches">${g.approaches.map((defaultName,ai)=>{
+   const a=it.approaches[gi]?.[ai]||{group:g.name,name:defaultName,description:"",designPrompt:"",captionPrompt:"",ctas:[]};
+   return `<div class="approach"><span class="tag">${esc(g.name)}</span><h3>${esc(a.name)}</h3><p>${esc(a.description)}</p><div class="buttons"><button class="btn primary" onclick="openApproach(${ci},${ii},${gi},${ai})">Open approach →</button></div></div>`;
+ }).join("")}</div>`).join("")}`;
+}
+function editItemPage(ci,ii){toggleEdit(true);openItem(ci,ii);}
+
+function approachState(ci,ii,gi,ai){
+  const a=DATA.categories[ci].items[ii].approaches[gi][ai];
+  if(!a.designHeadlines) a.designHeadlines=(a.headlines&&a.headlines.length?a.headlines:[a.name||"Headline"]);
+  if(!a.captionHeadlines) a.captionHeadlines=[...a.designHeadlines];
+  if(!a.designCtas) a.designCtas=(a.ctas&&a.ctas.length?a.ctas:["Order now","Visit us today","Try it today"]);
+  if(!a.captionCtas) a.captionCtas=[...a.designCtas];
+  a.headlines=a.designHeadlines;
+  a.ctas=a.designCtas;
+  if(!a.selectedDesignHeadline || !a.designHeadlines.includes(a.selectedDesignHeadline)) a.selectedDesignHeadline=a.designHeadlines[0]||"";
+  if(!a.selectedDesignCTA || !a.designCtas.includes(a.selectedDesignCTA)) a.selectedDesignCTA=a.designCtas[0]||"";
+  if(!a.selectedCaptionHeadline || !a.captionHeadlines.includes(a.selectedCaptionHeadline)) a.selectedCaptionHeadline=a.captionHeadlines[0]||"";
+  if(!a.selectedCaptionCTA || !a.captionCtas.includes(a.selectedCaptionCTA)) a.selectedCaptionCTA=a.captionCtas[0]||"";
+  ensureModePrompts(a);
+  return a;
+}
+
+function currentApproach(){
+  return approachState(current.cat,current.item,current.group,current.approach);
+}
+function selectedDesignHeadline(){
+  const a=currentApproach();
+  return $("headlineSelectAI")?.value || $("headlineSelect")?.value || a.selectedDesignHeadline || a.designHeadlines[0] || "";
+}
+function selectedDesignCTA(){
+  const a=currentApproach();
+  return $("ctaSelectAI")?.value || $("ctaSelect")?.value || a.selectedDesignCTA || a.designCtas[0] || "";
+}
+function selectedCaptionHeadline(){
+  const a=currentApproach();
+  return $("captionHeadlineSelectAI")?.value || $("captionHeadlineSelect")?.value || a.selectedCaptionHeadline || a.captionHeadlines[0] || "";
+}
+function selectedCaptionCTA(){
+  const a=currentApproach();
+  return $("captionCTASelectAI")?.value || $("captionCTASelect")?.value || a.selectedCaptionCTA || a.captionCtas[0] || "";
+}
+function fillTemplate(text, values){
+  return String(text||"")
+    .replace(/\{\{designHeadline\}\}/gi, values.designHeadline)
+    .replace(/\{\{designCTA\}\}/gi, values.designCTA)
+    .replace(/\{\{captionHeadline\}\}/gi, values.captionHeadline)
+    .replace(/\{\{captionHook\}\}/gi, values.captionHeadline)
+    .replace(/\{\{captionCTA\}\}/gi, values.captionCTA)
+    .replace(/\{\{headline\}\}/gi, values.designHeadline)
+    .replace(/\{\{cta\}\}/gi, values.designCTA)
+    .replace(/\{\{itemName\}\}/gi, values.itemName||"")
+    .replace(/\{\{price\}\}/gi, values.price||"")
+    .replace(/\{\{offer\}\}/gi, values.offer||"");
+}
+const MAX_DISHES=5;
+function normOffer(o){
+  if(!o||typeof o!=="object") o={itemName:"",price:"",offer:""};
+  // Older saved data had a single item + price; turn that into the first dish row.
+  if(!Array.isArray(o.items)) o.items=[{name:o.itemName||"",price:o.price||""}];
+  o.items=o.items.slice(0,MAX_DISHES).map(d=>({name:(d&&d.name)||"",price:(d&&d.price)||""}));
+  if(!o.items.length) o.items.push({name:"",price:""});
+  if(typeof o.offer!=="string") o.offer="";
+  o.itemName=o.items[0].name; o.price=o.items[0].price; // keep legacy fields in step
+  return o;
+}
+function currentLiveOffer(){
+  const it=DATA.categories[current.cat]?.items?.[current.item];
+  if(!it) return normOffer(null);
+  it.liveOffer=normOffer(it.liveOffer);
+  return it.liveOffer;
+}
+function offerPlaceholderValues(off){
+  const ds=off.items.filter(d=>d.name||d.price);
+  return {
+    itemName:ds.map(d=>d.name).filter(Boolean).join(", "),
+    price:ds.length>1?ds.filter(d=>d.price).map(d=>`${d.name||"Dish"}: ${d.price}`).join(", "):(ds[0]?ds[0].price:""),
+    offer:off.offer||""
+  };
+}
+function offerLinesFor(off,forCaption){
+  const lines=[];
+  const ds=off.items.filter(d=>(d.name||"").trim()||(d.price||"").trim());
+  if(ds.length===1){
+    const d=ds[0];
+    if(d.name.trim()) lines.push(`- Item/dish name: "${d.name.trim()}"`);
+    if(d.price.trim()) lines.push(`- Price: "${d.price.trim()}"`);
+  }else if(ds.length>1){
+    lines.push(`- Dishes to feature (include ALL ${ds.length} ${forCaption?"in the caption":"in this one design"}):`);
+    ds.forEach((d,i)=>lines.push(`  ${i+1}. ${d.name.trim()?`"${d.name.trim()}"`:"(unnamed dish)"}${d.price.trim()?` - Price: "${d.price.trim()}"`:" - no price"}`));
+    lines.push(`- Show each price only next to its own dish. Never show a price for a dish marked "no price", and never mix up prices between dishes.`);
+  }
+  if((off.offer||"").trim()) lines.push(`- Offer (applies to the whole post, not a dish price): "${off.offer.trim()}"`);
+  return lines;
+}
+function dishRowsHTML(off){
+  return off.items.map((d,i)=>`<div class="dishRow"><span class="dishNum">${i+1}</span><input class="dishName" value="${esc(d.name)}" placeholder="Dish name e.g. Nyama Choma Platter" oninput="setDish(${i},'name',this.value)"><input class="dishPrice" value="${esc(d.price)}" placeholder="Price e.g. KES 800" oninput="setDish(${i},'price',this.value)">${off.items.length>1?`<button type="button" class="miniX" title="Remove this dish" onclick="removeDish(${i})">✕</button>`:`<span></span>`}</div>`).join("");
+}
+function setDish(i,k,v){const off=currentLiveOffer();if(!off.items[i])return;off.items[i][k]=v;normOffer(off);save();updatePromptPreview();}
+function setOfferText(v){const off=currentLiveOffer();off.offer=v;save();updatePromptPreview();}
+function addDish(){
+  const off=currentLiveOffer();
+  if(off.items.length>=MAX_DISHES) return;
+  off.items.push({name:"",price:""});
+  refreshDishRows();
+  const ins=document.querySelectorAll("#dishRows .dishName");
+  if(ins.length) ins[ins.length-1].focus();
+}
+function removeDish(i){
+  const off=currentLiveOffer();
+  if(off.items.length<=1) return;
+  off.items.splice(i,1);
+  normOffer(off);
+  refreshDishRows();
+}
+function refreshDishRows(){
+  const off=currentLiveOffer();
+  const box=$("dishRows"); if(box) box.innerHTML=dishRowsHTML(off);
+  const b=$("addDishBtn"); if(b) b.style.display=off.items.length>=MAX_DISHES?"none":"";
+  const n=$("dishCount"); if(n) n.textContent=off.items.length>1?`${off.items.length} dishes in this design`:"1 dish";
+  save();updatePromptPreview();
+}
+// ---------------------------------------------------------------
+// Canva AI and AI Chat each have their OWN prompt template, stored
+// separately (a.canvaPrompt / a.aiPrompt). Editing one never touches
+// the other. Templates keep {{designHeadline}} / {{designCTA}} markers,
+// so the selected headline + CTA are filled in automatically for BOTH.
+// ---------------------------------------------------------------
+const PROMPT_FIELD={canva:"canvaPrompt",ai:"aiPrompt"};
+function stripOfferLines(t){
+  return String(t||"")
+    .replace(/^[ \t]*- Item\/dish name:.*(\r?\n|$)/gm,"")
+    .replace(/^[ \t]*- Price: ".*"[ \t]*(\r?\n|$)/gm,"")
+    .replace(/^[ \t]*- Dishes to feature \(include ALL.*(\r?\n|$)/gm,"")
+    .replace(/^[ \t]+\d+\. .* - (Price: ".*"|no price)[ \t]*(\r?\n|$)/gm,"")
+    .replace(/^[ \t]*- Show each price only next to its own dish.*(\r?\n|$)/gm,"")
+    .replace(/^[ \t]*- Offer \(applies to the whole post.*(\r?\n|$)/gm,"");
+}
+// Turn visible prompt text back into a template (selected headline/CTA -> markers)
+function textToTemplate(t,a){
+  let s=stripOfferLines(t);
+  s=s.replace(/(Exact headline:\s*")[^"\n]*(")/gi,"$1{{designHeadline}}$2")
+     .replace(/(Exact CTA:\s*")[^"\n]*(")/gi,"$1{{designCTA}}$2");
+  const h=a.selectedDesignHeadline,c=a.selectedDesignCTA;
+  if(h) s=s.split('"'+h+'"').join('"{{designHeadline}}"');
+  if(c) s=s.split('"'+c+'"').join('"{{designCTA}}"');
+  return s.replace(/\s+$/,"");
+}
+function ensureModePrompts(a){
+  const ov=a.promptOverrides||{};
+  ["canva","ai"].forEach(m=>{
+    const f=PROMPT_FIELD[m];
+    if(typeof a[f]==="string" && a[f].trim()) return;
+    // first time: start from the saved edit for that side (if any), else the original prompt
+    a[f]=ov[m] ? textToTemplate(ov[m],a) : (a.designPrompt||"");
+  });
+  if(a.promptOverrides) delete a.promptOverrides;
+}
+function syncSelectionsIntoText(t){return t}
+function syncOverrides(a){}
+function buildPromptFor(mode){
+  const a=currentApproach();
+  const off=currentLiveOffer();
+  const c=DATA.categories[current.cat];
+  const tpl=a[PROMPT_FIELD[mode]]||a.designPrompt||"";
+  const values={designHeadline:selectedDesignHeadline(),designCTA:selectedDesignCTA(),captionHeadline:selectedCaptionHeadline(),captionCTA:selectedCaptionCTA(),...offerPlaceholderValues(off)};
+  let base=fillTemplate(tpl,values);
+  // if someone's prompt has no headline/CTA marker, still make sure the selections are in it
+  const missing=[];
+  if(!/\{\{(designHeadline|headline)\}\}/i.test(tpl)) missing.push(`- Exact headline: "${values.designHeadline}"`);
+  if(!/\{\{(designCTA|cta)\}\}/i.test(tpl)) missing.push(`- Exact CTA: "${values.designCTA}"`);
+  const offerLines=(c&&c.needsOfferFields)?offerLinesFor(off,false):[];
+  const extra=[...missing,...offerLines];
+  if(!extra.length) return base;
+  const extraBlock="\n"+extra.join("\n");
+  const ctaLineRe=/(-\s*Exact CTA:\s*"[^"]*")/i;
+  if(!missing.length && ctaLineRe.test(base)){
+    base=base.replace(ctaLineRe,(m,g1)=>g1+extraBlock);
+  }else if(/\bDESIGN COPY TO USE\b/i.test(base)){
+    base=base.replace(/\bDESIGN COPY TO USE:?/i,m=>m+extraBlock);
+  }else{
+    base+=`\n\nDESIGN COPY TO USE:${extraBlock}`;
+  }
+  return base;
+}
+function buildDesignPrompt(){return buildPromptFor(getMode())}
+function buildCaptionPrompt(){
+  const a=currentApproach();
+  const off=currentLiveOffer();
+  const c=DATA.categories[current.cat];
+  const values={designHeadline:selectedDesignHeadline(),designCTA:selectedDesignCTA(),captionHeadline:selectedCaptionHeadline(),captionCTA:selectedCaptionCTA(),...offerPlaceholderValues(off)};
+  let base=fillTemplate(a.captionPrompt||"",values);
+  const offerLines=[];
+  if(c && c.needsOfferFields){
+    offerLines.push(...offerLinesFor(off,true));
+  }
+  const extraBlock=offerLines.length ? "\n"+offerLines.join("\n") : "";
+  const ctaLineRe=/(-\s*CTA:\s*"[^"]*")/i;
+  if(ctaLineRe.test(base)){
+    if(extraBlock) base=base.replace(ctaLineRe,(m,g1)=>g1+extraBlock);
+  }else if(/\bCAPTION COPY TO USE\b/i.test(base)){
+    base=base.replace(/\bCAPTION COPY TO USE:?/i, match=>`${match}${extraBlock}`);
+  }else{
+    base += `\n\nCAPTION COPY TO USE:\n- Opening hook: "${values.captionHeadline}"\n- CTA: "${values.captionCTA}"${extraBlock}`;
+  }
+  return base;
+}
+function updatePromptPreview(){
+  const box=$("promptEditor");
+  if(box) box.value=effectiveDesignPrompt();
+  refreshPromptMeta();
+}
+
+function copyText(text,btn){
+  navigator.clipboard?.writeText(text);
+  if(btn){const old=btn.textContent;btn.textContent="Copied ✓";setTimeout(()=>btn.textContent=old,900)}
+}
+
+function copySelectedHeadline(btn){copyText(selectedHeadline(),btn)}
+function copySelectedCTA(btn){copyText(selectedCTA(),btn)}
+
+function openApproach(ci,ii,gi,ai){
+  current={cat:ci,item:ii,group:gi,approach:ai};
+  const c=DATA.categories[ci],it=c.items[ii],g=DATA.approachGroups[gi],a=approachState(ci,ii,gi,ai);
+  if(!it.liveOffer||typeof it.liveOffer!=="object") it.liveOffer={itemName:"",price:"",offer:""};
+  const offer=normOffer(it.liveOffer); it.liveOffer=offer;
+  const link=a.canvaLink||""; // stored on the approach itself so it travels with the rest of the data
+  const designHeadlines=a.designHeadlines||[];
+  const captionHeadlines=a.captionHeadlines||designHeadlines;
+  const designCtas=a.designCtas||[];
+  const captionCtas=a.captionCtas||[];
+  const mode=a.createMode==="ai"?"ai":"canva";
+
+  $("app").innerHTML=`<button class="back" onclick="openItem(${ci},${ii})">← Back to approaches</button>
+  <div class="head"><div><div class="eyebrow">${esc(it.name)} / ${esc(a.tagline||g.name)}</div><h2>${esc(a.name)}</h2><p>${esc(a.description)}</p></div></div>
+
+
+  ${c.needsOfferFields?`<div class="pathIntro" style="border:1px solid var(--line);background:var(--bg2,#f7f7f5)">
+    <h3>Today's details</h3>
+    <p style="margin-bottom:10px">Fill these in for what you're posting right now. Add up to 5 dishes if one design shows several. Each price stays with its own dish. They're added to the prompts below automatically.</p>
+    <div class="dishHead"><span>Dishes &amp; prices</span><span id="dishCount" class="mini">${offer.items.length>1?`${offer.items.length} dishes in this design`:"1 dish"}</span></div>
+    <div id="dishRows">${dishRowsHTML(offer)}</div>
+    <button type="button" id="addDishBtn" class="btn" style="margin-top:10px;${offer.items.length>=MAX_DISHES?"display:none":""}" onclick="addDish()">+ Add another dish</button>
+    <div class="field" style="margin-top:16px"><label>Offer <span class="mini">(optional — applies to the whole post, not to a single dish)</span></label><input value="${esc(offer.offer)}" placeholder="e.g. Only 5 left today" oninput="setOfferText(this.value)"></div>
+  </div>`:""}
+
+  ${factsPanelHTML(it)}
+  <div class="createBox">
+    <div class="createHead">
+      <h3>Create this design</h3>
+      <p>Pick the headline and call to action, then press Generate to build your poster.</p>
+    </div>
+
+    <div class="section">
+      <div class="sectionTitle">Design</div>
+      <div class="copyGroup first"><label><span>Design headline</span><span class="mini">Used in the design</span></label>
+        <div class="copyRow"><select id="headlineSelect" class="copySelect" onchange="saveSelectionsFromUI()">
+          ${designHeadlines.map(h=>`<option value="${esc(h)}" ${h===a.selectedDesignHeadline?"selected":""}>${esc(h)}</option>`).join("")}
+        </select><button class="copyBtn" onclick="copyText(selectedDesignHeadline(),this)">Copy</button></div>
+      </div>
+      <div class="copyGroup"><label><span>Design CTA</span><span class="mini">Used in the design</span></label>
+        <div class="copyRow"><select id="ctaSelect" class="copySelect" onchange="saveSelectionsFromUI()">
+          ${designCtas.map(x=>`<option value="${esc(x)}" ${x===a.selectedDesignCTA?"selected":""}>${esc(x)}</option>`).join("")}
+        </select><button class="copyBtn" onclick="copyText(selectedDesignCTA(),this)">Copy</button></div>
+      </div>
+
+      <div class="methodPanel">
+        <p class="methodNote">Press Generate and your poster is made automatically in Design Studio, using the dish, price, offer, headline and call to action chosen here.</p>
+        <button class="btn primary" onclick="DS.feed(${ci},${ii},${gi},${ai})">🎨 Generate poster</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sectionTitle">Caption</div>
+      <div class="copyGroup first"><label><span>Caption hook</span><span class="mini">Used by caption prompt</span></label>
+        <div class="copyRow"><select id="captionHeadlineSelect" class="copySelect" onchange="saveSelectionsFromUI()">
+          ${captionHeadlines.map(h=>`<option value="${esc(h)}" ${h===a.selectedCaptionHeadline?"selected":""}>${esc(h)}</option>`).join("")}
+        </select><button class="copyBtn" onclick="copyText(selectedCaptionHeadline(),this)">Copy</button></div>
+      </div>
+      <div class="copyGroup"><label><span>Caption CTA</span><span class="mini">Used by caption prompt</span></label>
+        <div class="copyRow"><select id="captionCTASelect" class="copySelect" onchange="saveSelectionsFromUI()">
+          ${captionCtas.map(x=>`<option value="${esc(x)}" ${x===a.selectedCaptionCTA?"selected":""}>${esc(x)}</option>`).join("")}
+        </select><button class="copyBtn" onclick="copyText(selectedCaptionCTA(),this)">Copy</button></div>
+      </div>
+      <div class="copyGroup"><label><span>Caption prompt</span><span class="mini">Selected copy is inserted automatically</span></label>
+        <div class="row"><button class="btn primary" onclick="promptModal('caption')">✍️ View & copy caption prompt</button><a class="btn green" href="https://chatgpt.com/" target="_blank" rel="noopener">Open ChatGPT ↗</a></div><p class="pathHint">Copy the caption prompt, open ChatGPT, paste it, and attach your finished poster.</p>
+      </div>
+    </div>
+  </div>
+
+  ${IS_ADMIN?`<div class="editPanel"><h3>Everything for this approach is editable</h3>
+   <div class="field"><label>Approach name</label><input value="${esc(a.name)}" oninput="editApproachField('name',this.value)"></div>
+   <div class="field"><label>Approach description</label><textarea oninput="editApproachField('description',this.value)">${esc(a.description)}</textarea></div>
+   <div class="field"><label>Design headlines — one per line</label><textarea oninput="editApproachField('designHeadlines',this.value.split('\\n').map(x=>x.trim()).filter(Boolean))">${esc((a.designHeadlines||[]).join("\\n"))}</textarea><small>These are the headlines available for the social-media design.</small></div>
+   <div class="field"><label>Caption hooks — one per line</label><textarea oninput="editApproachField('captionHeadlines',this.value.split('\\n').map(x=>x.trim()).filter(Boolean))">${esc((a.captionHeadlines||[]).join("\\n"))}</textarea><small>These are the opening hook lines available for the caption.</small></div>
+         <div class="field"><label>Caption prompt</label><textarea oninput="editApproachField('captionPrompt',this.value)">${esc(a.captionPrompt)}</textarea><small>Use {{captionHook}} and {{captionCTA}} to place the selected caption copy exactly where you want it. {{itemName}}, {{price}} and {{offer}} are also available for Products/Promotions categories.</small></div>
+   <div class="field"><label>Design CTA options — one per line</label><textarea oninput="editApproachField('designCtas',this.value.split('\\n').map(x=>x.trim()).filter(Boolean))">${esc((a.designCtas||[]).join("\\n"))}</textarea></div>
+   <div class="field"><label>Caption CTA options — one per line</label><textarea oninput="editApproachField('captionCtas',this.value.split('\\n').map(x=>x.trim()).filter(Boolean))">${esc((a.captionCtas||[]).join("\\n"))}</textarea></div>
+   <button class="btn green" onclick="save();openApproach(${ci},${ii},${gi},${ai})">Save changes</button>
+  </div>`:""}`;
+
+  syncOverrides(a);
+  updatePromptPreview();
+}
+function getMode(){return currentApproach().createMode==="ai"?"ai":"canva"}
+function isPromptEdited(){const a=currentApproach();return (a[PROMPT_FIELD[getMode()]]||"").trim()!==(a.designPrompt||"").trim()}
+function effectiveDesignPrompt(){return buildDesignPrompt()}
+function setCreateMode(m){
+  const a=currentApproach();
+  a.createMode=m==="ai"?"ai":"canva";
+  save();
+  updatePromptPreview();
+}
+function onPromptEdit(v){
+  const a=currentApproach();
+  a[PROMPT_FIELD[getMode()]]=textToTemplate(v,a); // saved ONLY for the side you're on
+  save();
+  refreshPromptMeta();
+}
+function resetPrompt(){
+  const a=currentApproach();
+  a[PROMPT_FIELD[getMode()]]=a.designPrompt||"";
+  save();
+  updatePromptPreview();
+}
+function refreshPromptMeta(){
+  const m=getMode(),edited=isPromptEdited();
+  $("modeBtnCanva")?.classList.toggle("active",m==="canva");
+  $("modeBtnAI")?.classList.toggle("active",m==="ai");
+  if($("promptLabel")) $("promptLabel").textContent=m==="canva"?"CANVA AI PROMPT — PASTE INTO CANVA AI":"AI CHAT PROMPT — PASTE INTO YOUR AI CHAT";
+  if($("promptNote")) $("promptNote").textContent=m==="canva"
+    ?"Copy this into Canva AI. It already contains your selected headline and CTA."+(IS_ADMIN?" You can edit it freely.":"")
+    :"Copy this into your AI chat along with your food photo. It already contains your selected headline and CTA."+(IS_ADMIN?" You can edit it freely.":"");
+  if($("selectionSummary")) $("selectionSummary").innerHTML=`<span>✓ Inserted in prompt</span><b>Headline:</b> ${esc(selectedDesignHeadline())} <b>CTA:</b> ${esc(selectedDesignCTA())}`;
+  if($("promptStatus")) $("promptStatus").textContent=!IS_ADMIN?"Ready to copy":edited?"✏️ Edited — headline & CTA still follow your dropdowns. Use Reset to go back to the original.":"Auto-updates when you change the selections";
+  if($("openToolLink")) $("openToolLink").style.display=m==="canva"?"":"none";
+}
+function saveSelectionsFromUI(){
+  const a=currentApproach();
+  const dh=$("headlineSelectAI")?.value || $("headlineSelect")?.value || a.selectedDesignHeadline;
+  const dc=$("ctaSelectAI")?.value || $("ctaSelect")?.value || a.selectedDesignCTA;
+  const ch=$("captionHeadlineSelectAI")?.value || $("captionHeadlineSelect")?.value || a.selectedCaptionHeadline;
+  const cc=$("captionCTASelectAI")?.value || $("captionCTASelect")?.value || a.selectedCaptionCTA;
+  a.selectedDesignHeadline=dh;a.selectedDesignCTA=dc;a.selectedCaptionHeadline=ch;a.selectedCaptionCTA=cc;
+  ["headlineSelect","headlineSelectAI"].forEach(id=>{if($(id)) $(id).value=dh});
+  ["ctaSelect","ctaSelectAI"].forEach(id=>{if($(id)) $(id).value=dc});
+  ["captionHeadlineSelect","captionHeadlineSelectAI"].forEach(id=>{if($(id)) $(id).value=ch});
+  ["captionCTASelect","captionCTASelectAI"].forEach(id=>{if($(id)) $(id).value=cc});
+  syncOverrides(a);
+  save();
+  updatePromptPreview();
+}
+function editApproachField(k,v){
+  const a=currentApproach();
+  a[k]=v;
+  if(k==="designHeadlines") a.headlines=v;
+  if(k==="designCtas") a.ctas=v;
+  if(k==="designHeadlines" && !v.includes(a.selectedDesignHeadline)) a.selectedDesignHeadline=v[0]||"";
+  if(k==="captionHeadlines" && !v.includes(a.selectedCaptionHeadline)) a.selectedCaptionHeadline=v[0]||"";
+  if(k==="designCtas" && !v.includes(a.selectedDesignCTA)) a.selectedDesignCTA=v[0]||"";
+  if(k==="captionCtas" && !v.includes(a.selectedCaptionCTA)) a.selectedCaptionCTA=v[0]||"";
+  save();
+}
+function saveLink(){const x=$("canvaUrl"),a=currentApproach();a.canvaLink=(x&&x.value.trim())?x.value.trim():"";save();openApproach(current.cat,current.item,current.group,current.approach)}
+
+function promptModal(type){
+  saveSelectionsFromUI();
+  const a=currentApproach();
+  $("mtype").textContent=type==="design"?"DESIGN CREATION PROMPT":"CAPTION PROMPT";
+  $("mtitle").textContent=a.name;
+  $("mtext").value=type==="design"?effectiveDesignPrompt():buildCaptionPrompt();
+  $("modal").classList.add("show");
+}
+function closeModal(){$("modal").classList.remove("show")}
+function copyPrompt(){const x=$("mtext");navigator.clipboard?.writeText(x.value);x.select();document.execCommand("copy")}
+
+function toggleEdit(force){
+ if(!IS_ADMIN) return;
+ editing=typeof force==="boolean"?force:!editing;
+ $("modeBadge").textContent=editing?"EDIT MODE — changes auto-save":"Brand & Content System";
+ home();
+}
+function exportData(){
+ const blob=new Blob([JSON.stringify(DATA,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="restaurant-content-os-data.json";a.click();URL.revokeObjectURL(url);
+}
+function importData(e){
+ const f=e.target.files[0];if(!f)return;
+ const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.categories)throw Error();DATA=d;save();home();alert("Dashboard imported successfully.");}catch(err){alert("Invalid dashboard JSON file.");}};r.readAsText(f);
+}
+initApp();
+window.addEventListener("beforeunload",()=>{try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA));localStorage.setItem(LEGACY_STORAGE_KEY,JSON.stringify(DATA));}catch(e){}});
+window.addEventListener("pagehide",()=>{try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA));localStorage.setItem(LEGACY_STORAGE_KEY,JSON.stringify(DATA));}catch(e){}});
+// Extra safety net: mobile browsers (and closing a tab via the tab bar) don't always
+// fire beforeunload/pagehide reliably, so also save whenever the tab is hidden/backgrounded.
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA));localStorage.setItem(LEGACY_STORAGE_KEY,JSON.stringify(DATA));}catch(e){}}});
+</script>
+<script id="design-studio">
+/* ===== DESIGN STUDIO v1 — separate module. Never touches DATA, Supabase or the dashboard's own storage. ===== */
+(function(){
+if(typeof SLUG==="undefined")return;
+const W=1080,H=1350,KEY="ros_design_studio_v1:"+SLUG,BKEY="ros_brand_profile_v1:"+SLUG;
+const PRESET={name:"KWK Kitchen",category:"Fast Food & Hibachi Foods",tone:"Confident and natural. Avoid corporate, robotic, generic-AI, exaggerated or overly formal language.",description:"",guidelines:"",primary:"#EDA709",secondary:"#5B2010",bg:"#FFFFFF",head:"Horizon",body:"Canva Sans",script:"Brittany",logo:"",logoDim:null,logoPos:"auto",logoPct:9,voice:"warm, appetizing, energetic, welcoming, modern, food-focused",tagline:"Every bite tells a story.",contactBar:"+1972-266-4243 | Duncanville, Texas",location:"Duncanville, Texas"};
+const STACK={Horizon:'Horizon,"Arial Black",Impact,sans-serif',Brittany:'Brittany,"Brush Script MT","Segoe Script",cursive',"Canva Sans":'"Canva Sans","Segoe UI",Arial,sans-serif'};
+let regF=[];async function loadFonts(){regF.forEach(f=>{try{document.fonts.delete(f)}catch(e){}});regF=[];for(const r of["head","body","script"]){const u=B.fonts&&B.fonts[r];if(!u||!B[r])continue;try{const ff=new FontFace(B[r],`url(${u.data})`);await ff.load();document.fonts.add(ff);regF.push(ff)}catch(e){}}}
+const stack=n=>STACK[n]||`"${String(n).replace(/["'<>&]/g,"")}",Arial,sans-serif`;
+const LAYS={hero:"Food-led",type:"Bold type",edit:"Editorial",offer:"Big offer",menu:"Menu list"};
+const BSLUG=SLUG+"__brand",sbH=()=>({apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`});
+async function brandPull(){try{const r=await fetch(`${SUPABASE_URL}/rest/v1/dashboards?slug=eq.${encodeURIComponent(BSLUG)}&select=data`,{headers:sbH()});if(!r.ok)throw 0;const rows=await r.json();
+ if(rows&&rows[0]&&rows[0].data){B=Object.assign({},PRESET,rows[0].data);if(IS_ADMIN)try{localStorage.setItem(BKEY,JSON.stringify(B))}catch(e){}return true}}catch(e){}return false}
+let bT=null;function brandPush(){clearTimeout(bT);bT=setTimeout(async()=>{try{const r=await fetch(`${SUPABASE_URL}/rest/v1/dashboards`,{method:"POST",headers:Object.assign({"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=minimal"},sbH()),body:JSON.stringify({slug:BSLUG,data:B,updated_at:new Date().toISOString()})});if(!r.ok)throw Error("error "+r.status);msg("Brand profile saved to the cloud ✓")}catch(e){msg("Brand saved on this computer only; cloud sync failed ("+e.message+"). Change anything again to retry.",1)}},800)}
+const idb=(m,k,v)=>new Promise(res=>{try{const q=indexedDB.open("ros_design_studio",1);q.onupgradeneeded=()=>q.result.createObjectStore("f");q.onerror=()=>res(null);q.onsuccess=()=>{const d=q.result,t=d.transaction("f",m==="get"?"readonly":"readwrite"),st=t.objectStore("f"),r=m==="get"?st.get(k):m==="put"?st.put(v,k):st.delete(k);r.onsuccess=()=>res(m==="get"?(r.result||null):"ok");r.onerror=()=>res(null);t.oncomplete=()=>d.close()}}catch(e){res(null)}});
+let foodSaved=false,foodInJson=false;
+const brandFromData=()=>(typeof DATA!=="undefined"&&DATA&&DATA.brand)||null;
+const rd0=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}};
+const fresh=()=>({layout:"hero",gen:false,c:{product:"",price:"",offer:"",headline:"",support:"",cta:"",contact:"",location:"",bar:false},ov:{},food:"",foodDim:null,bg:null});
+let B=Object.assign({},PRESET,rd0(BKEY)||{}),S=Object.assign(fresh(),rd0(KEY)||{});
+S.c=Object.assign(fresh().c,S.c||{});if(!S.bg)S.layout="hero";S.ov=S.ov||{};
+let EL=[],sel=null,drag=null,warns=[],undo=[],lastSnap=0,saveT=null;
+const cv=document.createElement("canvas").getContext("2d");
+/* ---------- colour helpers ---------- */
+const hx=h=>{h=String(h||"#000").replace("#","");if(h.length===3)h=h.split("").map(x=>x+x).join("");return[0,2,4].map(i=>parseInt(h.substr(i,2),16)||0)};
+const lum=h=>{const[r,g,b]=hx(h).map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*r+.7152*g+.0722*b};
+const cr=(a,b)=>{const x=lum(a),y=lum(b);return(Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+const rdbl=bg=>[B.secondary,"#111111","#FFFFFF"].find(c=>cr(c,bg)>=4.5)||(cr("#FFFFFF",bg)>cr("#111111",bg)?"#FFFFFF":"#111111");
+const hasFont=n=>{const t="mmmmmmmmmmlli",m=f=>{cv.font="72px "+f;return cv.measureText(t).width};return["monospace","serif","sans-serif"].some(g=>m(`"${n}",${g}`)!==m(g))};
+/* ---------- text wrapping ---------- */
+function wrap(txt,font,wt,size,w){cv.font=`${wt} ${size}px ${font}`;const out=[];let tooWide=false;String(txt).split("\n").forEach(par=>{let line="";par.split(/\s+/).filter(Boolean).forEach(word=>{if(cv.measureText(word).width>w)tooWide=true;const t=line?line+" "+word:word;if(!line||cv.measureText(t).width<=w)line=t;else{out.push(line);line=word}});out.push(line)});return{lines:out,tooWide}}
+const O=id=>(S.ov[S.layout]||{})[id]||{};
+const FONT={head:()=>B.head,body:()=>B.body,script:()=>B.script};
+/* ---------- background library: manual uploads + metadata + recommendations ---------- */
+/* LAYOUT SPECS: each says where every element goes. Format: [x, y, width, maxFontSize, minFontSize, maxLines, align]. */
+const SPECS=[
+ {id:"L-TOP",name:"Headline top · food below",food:"bottom",safe:["top"],R:{logo:"l",headline:[60,150,960,104,56,2,"c"],product:[60,395,960,46,30,1,"c"],support:[60,455,960,26,20,1,"c"],food:[190,520,700,560,"round"],price:{circle:[880,560,105],box:[790,490,180,140],size:56},offer:[190,1100,700,34,22,1,"c"],cta:[340,1160,400],info:[760,1175,260,22,2,"r"]}},
+ {id:"L-LEFT",name:"Text left · food right",food:"right",safe:["left"],R:{logo:"l",headline:[60,170,520,96,52,3,"l"],product:[60,500,520,44,30,2,"l"],support:[60,620,520,26,20,3,"l"],food:[600,260,440,700,"round"],price:{pill:[60,760,360,110],box:[80,760,320,110],size:84},offer:[60,890,520,34,22,2,"l"],cta:[60,1100,420],info:[520,1190,520,22,2,"r"]}},
+ {id:"L-BOTTOM",name:"Food top · text below",food:"top",safe:["bottom"],R:{logo:"l",headline:[60,650,960,88,52,2,"c"],product:[60,856,960,42,28,1,"c"],support:[60,910,960,24,20,1,"c"],food:[260,70,560,560,"circle"],price:{pill:[340,950,400,90],box:[360,950,360,90],size:60},offer:[60,1050,960,30,22,1,"c"],cta:[340,1110,400],info:[60,1215,960,22,1,"c"]}}
+];
+const STYLES=["Dark","Light","Warm","Textured","Gradient","Photographic","Minimal"],SIDES=["top","bottom","left","right","center"];
+let BG=[],bgData="",bgDim=null,bgCv=null,bgMem={},bgFilter="all",bgSelId=null,bgT=null;
+const LSLUG=SLUG+"__bglib";
+async function cloudGet(sl){try{const r=await fetch(`${SUPABASE_URL}/rest/v1/dashboards?slug=eq.${encodeURIComponent(sl)}&select=data`,{headers:sbH()});if(!r.ok)return null;const rows=await r.json();return rows&&rows[0]?rows[0].data:null}catch(e){return null}}
+async function cloudPut(sl,data){try{const r=await fetch(`${SUPABASE_URL}/rest/v1/dashboards`,{method:"POST",headers:Object.assign({"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=minimal"},sbH()),body:JSON.stringify({slug:sl,data,updated_at:new Date().toISOString()})});return r.ok}catch(e){return false}}
+async function cloudDel(sl){try{await fetch(`${SUPABASE_URL}/rest/v1/dashboards?slug=eq.${encodeURIComponent(sl)}`,{method:"DELETE",headers:sbH()})}catch(e){}}
+async function bgPull(){const d=await cloudGet(LSLUG);if(d&&Array.isArray(d.list)){BG=d.list;if(IS_ADMIN)idb("put","bglib:"+SLUG,BG);return}if(IS_ADMIN){const v=await idb("get","bglib:"+SLUG);if(Array.isArray(v))BG=v}}
+function bgPush(){idb("put","bglib:"+SLUG,BG);clearTimeout(bgT);bgT=setTimeout(async()=>{const ok=await cloudPut(LSLUG,{list:BG});msg(ok?"Background library saved to the cloud ✓":"Saved on this computer only; cloud sync failed. Change anything to retry.",!ok)},800)}
+async function bgImgGet(id){if(bgMem[id])return bgMem[id];let v=await idb("get","bg:"+id);if(!v){const d=await cloudGet(SLUG+"__bg__"+id);v=d&&d.img;if(v&&IS_ADMIN)idb("put","bg:"+id,v)}if(v)bgMem[id]=v;return v||null}
+async function bgActivate(id){const d=BG.some(g=>g.id===id)?await bgImgGet(id):null;if(!d){bgData="";bgDim=null;bgCv=null;return false}
+ await new Promise(res=>{const i=new Image();i.onload=()=>{bgData=d;bgDim=[i.naturalWidth,i.naturalHeight];bgCv=document.createElement("canvas");bgCv.width=108;bgCv.height=135;const c=bgCv.getContext("2d",{willReadFrequently:true}),s=Math.max(108/i.naturalWidth,135/i.naturalHeight);c.drawImage(i,(108-i.naturalWidth*s)/2,(135-i.naturalHeight*s)/2,i.naturalWidth*s,i.naturalHeight*s);res()};i.onerror=res;i.src=d});return !!bgData}
+/* average colour of the background under a text box, so text colour is chosen for readability */
+function avg(x,y,w,h){if(!bgCv)return B.bg;const k=bgCv.width/W,X0=Math.max(0,x*k|0),Y0=Math.max(0,y*k|0),w2=Math.max(1,Math.min(w*k|0,108-X0)),h2=Math.max(1,Math.min(h*k|0,135-Y0)),d=bgCv.getContext("2d").getImageData(X0,Y0,w2,h2).data;let r=0,g=0,b=0;const n=d.length/4;for(let i=0;i<d.length;i+=4){r+=d[i];g+=d[i+1];b+=d[i+2]}return"#"+[r,g,b].map(v=>Math.round(v/n).toString(16).padStart(2,"0")).join("")}
+/* which layouts suit a background: its saved layout IDs, else layouts whose text zone matches its text-safe areas */
+function layoutsFor(g){let L=g.layouts&&g.layouts.length?SPECS.filter(s=>g.layouts.includes(s.id)):SPECS.filter(s=>!g.textSafe||!g.textSafe.length||s.safe.some(a=>g.textSafe.includes(a)));return L.sort((a,b)=>(b.food===g.food)-(a.food===g.food))}
+function bgScore(g){const s=S.src,cat=s&&s.catName,app=s&&s.appName;let v=0;if(cat&&g.categories.length){if(!g.categories.includes(cat))return-1;v+=1}if(app&&g.approaches.length){if(!g.approaches.includes(app))return-1;v+=2}return v}
+function renderBgPicker(){const el=$("ds-bg");if(!el)return;
+ const ok=BG.filter(g=>g.status==="approved"&&(!g.brand||g.brand===B.name)),rec=[],oth=[];ok.forEach(g=>(bgScore(g)>=0?rec:oth).push(g));rec.sort((a,b)=>bgScore(b)-bgScore(a));
+ const th=(g,t)=>`<button class="ds-bgt ${S.bg===g.id?"on":""}" onclick="DS.pickBg('${g.id}')" title="${esc(g.name)}"><img src="${g.thumb}" alt=""><span>${esc(g.name)}</span>${t?`<i>${t}</i>`:""}</button>`;
+ const cur=BG.find(g=>g.id===S.bg),Ls=cur?layoutsFor(cur):[];
+ el.innerHTML=`<h3 style="margin-top:16px">Background</h3>`+(ok.length?`<button class="btn ds-nobg ${S.bg?"":"on"}" onclick="DS.pickBg(null)">None: plain brand colour</button>
+ <p class="ds-hint" style="margin:8px 0 4px">${S.src?"Recommended for this campaign":"Approved backgrounds"}</p><div class="ds-bggrid">${rec.length?rec.map((g,i)=>th(g,i===0&&S.src&&bgScore(g)>0?"best match":"")).join(""):'<span class="ds-hint">None match this campaign yet.</span>'}</div>
+ ${oth.length?`<details><summary>Other approved (${oth.length})</summary><div class="ds-bggrid">${oth.map(g=>th(g,"")).join("")}</div></details>`:""}`
+ +(Ls.length>1?`<label>Layout<select onchange="DS.setLayout(this.value)">${Ls.map(l=>`<option value="${l.id}" ${S.layout===l.id?"selected":""}>${esc(l.name)}</option>`).join("")}</select></label>`:""):'<p class="ds-hint">No approved backgrounds yet. Your administrator adds them under 🖼️ Backgrounds.</p>');
+}
+function bgGrid(){const el=$("bg-grid");if(!el)return;const L=BG.filter(g=>bgFilter==="all"||g.status===bgFilter);
+ el.innerHTML=L.length?L.map(g=>`<button class="ds-bgt ${bgSelId===g.id?"on":""}" onclick="DS.bgSel('${g.id}')"><img src="${g.thumb}" alt=""><span>${esc(g.name)}</span><i>${g.status}</i></button>`).join(""):'<p class="ds-hint">Nothing here yet.</p>';
+ const n=$("bg-count");if(n)n.textContent=`${BG.length} uploaded · ${BG.filter(g=>g.status==="approved").length} approved`}
+function bgEditor(){const el=$("bg-edit");if(!el)return;const g=BG.find(x=>x.id===bgSelId);if(!g){el.innerHTML='<p class="ds-hint">Upload backgrounds, then click one to set its details.</p>';return}
+ const warn=[];if(Math.abs(g.w/g.h-.8)>.05)warn.push("not 4:5, so it will be cropped (never stretched)");if(g.w<1000)warn.push("under 1000 px wide, may look soft");
+ const ap=[...new Set(DATA.approachGroups.flatMap(x=>x.approaches))],cats=DATA.categories.map(c=>c.name);
+ const chk=(lab,key,opts)=>`<fieldset><legend>${lab}</legend><div class="ds-chips">${opts.map(o=>{const v=typeof o==="string"?o:o.id,t=typeof o==="string"?o:o.id+" · "+o.name;return`<label class="ds-chip"><input type="checkbox" ${g[key].includes(v)?"checked":""} onchange="DS.bgTog('${g.id}','${key}',decodeURIComponent('${encodeURIComponent(v)}'),this.checked)">${esc(t)}</label>`}).join("")}</div></fieldset>`;
+ const sel=(lab,key,opts,blank)=>`<label>${lab}<select onchange="DS.bgSet('${g.id}','${key}',this.value)">${blank?`<option value="">${blank}</option>`:""}${opts.map(o=>`<option value="${esc(o)}" ${g[key]===o?"selected":""}>${esc(o)}</option>`).join("")}</select></label>`;
+ el.innerHTML=`<img class="ds-bgprev" src="${g.thumb}" alt=""><p class="ds-hint">ID <b>${g.id}</b> · ${g.w}×${g.h}px${warn.length?" · ⚠ "+warn.join("; "):""}</p>
+ <label>Background name<input value="${esc(g.name)}" oninput="DS.bgSet('${g.id}','name',this.value)"></label>${sel("Approval status","status",["draft","approved","rejected"])}
+ <label>Approved brand / restaurant<select onchange="DS.bgSet('${g.id}','brand',this.value)"><option value="">Any restaurant</option><option value="${esc(B.name)}" ${g.brand===B.name?"selected":""}>${esc(B.name)} only</option></select></label>
+ ${sel("Background style","style",STYLES,"(not set)")}${sel("Preferred food-image placement","food",SIDES,"(not set)")}
+ ${chk("Suitable campaign categories (none ticked = any)","categories",cats)}${chk("Suitable marketing approaches (none ticked = any)","approaches",ap)}${chk("Text-safe areas","textSafe",SIDES)}${chk("Suitable layouts","layouts",SPECS)}
+ <label class="btn ds-up">Replace image<input type="file" accept="image/*" hidden onchange="DS.bgReplace('${g.id}',this)"></label><button class="btn" onclick="DS.bgDel('${g.id}')">Delete this background</button>`}
+const ensureCss=()=>{if(!$("ds-css")){const st=document.createElement("style");st.id="ds-css";st.textContent=CSS;document.head.appendChild(st)}};
+/* ---------- the poster model: layouts build a list of separate elements ---------- */
+function norm(){const c={};for(const k in S.c)c[k]=typeof S.c[k]==="string"?S.c[k].trim():S.c[k];c._hcf="headline";if(!c.headline){c.headline=c.product;c.product="";c._hcf="product"}return c}
+function build(){
+ const c=norm(),els=[],P=B.primary,X=B.secondary,G=B.bg,rd=rdbl,useSpec=S.layout!=="hero"&&!!bgData&&SPECS.some(x=>x.id===S.layout);
+ const b={
+  rect(id,label,x,y,w,h,fill,p){els.push(Object.assign({k:"rect",id,label,x,y,w,h,fill,rx:0},p))},
+  ell(id,label,cx,cy,r,fill,p){els.push(Object.assign({k:"ell",id,label,x:cx-r,y:cy-r,w:2*r,h:2*r,fill},p))},
+  img(id,label,x,y,w,h,p){els.push(Object.assign({k:"img",id,label,x,y,w,h},p))},
+  t(s){const o=O(s.id),font=stack(o.font||FONT[s.role]()),wt=o.wt||s.wt,lh=s.lh||1.1,txt=o.txt!==undefined?o.txt:s.txt;let size,r;
+   if(o.size){size=o.size;r=wrap(txt,font,wt,size,s.w)}else{size=s.size;for(;;){r=wrap(txt,font,wt,size,s.w);if((r.lines.length<=s.lines&&!r.tooWide)||size-2<s.min)break;size-=2}}
+   const h=r.lines.length*size*lh,y=s.h?s.y+Math.max(0,(s.h-h)/2):s.y;
+   const e=Object.assign({k:"text",rx:0},s,{txt,lines:r.lines,size,font,wt,lh,y,h,fill:o.fill||s.fill,al:o.al||s.al,fixed:!!o.size,over:r.tooWide||(!o.size&&r.lines.length>s.lines)});els.push(e);return e}
+ };
+ const logo=(def,chip)=>{const w=Math.round(B.logoPct/100*W),L=B.logoPos==="top-left"||(B.logoPos!=="top-right"&&def==="l"),x=L?40:W-40-w;
+  if(chip&&B.logo)b.rect("logoChip","Logo backing",x-12,28,w+24,w+24,"#FFFFFF",{rx:16,opt:1});
+  b.img("logo","Logo",x,40,w,w,{kind:"logo",fit:"contain",opt:1});return L};
+ const T=(id,label,cf,txt,x,y,w,size,min,lines,role,wt,on,al,extra)=>b.t(Object.assign({id,label,cf,txt,x,y,w,size,min,lines,role,wt,fill:rd(on),on,al},extra));
+ const info=(x,y,w,al,on,size,lines)=>{const t=[c.contact,c.location].filter(Boolean).join(" | ");if(!c.bar&&t)T("info","Contact info",null,t,x,y,w,size||26,20,lines||1,"body",600,on,al,{opt:1})};
+ const bar=()=>{const t=[c.contact,c.location].filter(Boolean).join(" | ")||B.contactBar;if(c.bar&&t){b.rect("contactBar","Contact bar",0,1270,W,80,X,{opt:1});T("contactText","Contact text",null,t,40,1270,1000,34,22,1,"body",600,X,"c",{h:80})}};
+ const cta=(id,x,y,w,fill,size)=>{b.rect("ctaBg","Button",x,y,w,84,fill,{rx:42});T("cta","Call to action","cta",c.cta||"Order now",x+20,y,w-40,size,22,1,"body",800,fill,"c",{h:84})};
+ if(!useSpec){
+  b.rect("bg","Background",0,0,W,H,X);b.img("photo","Food photo",0,0,W,760,{kind:"food"});b.rect("accent","Accent stripe",0,760,W,14,P,{opt:1});
+  const L=logo("l",true);
+  if(c.offer){const px=L?600:40;b.rect("offerPill","Offer tag",px,44,440,110,P,{rx:55,opt:1});T("offer","Offer","offer",c.offer,px+24,44,392,38,26,2,"body",700,P,"c",{h:110})}
+  if(c.price){b.ell("priceBadge","Price badge",900,770,125,P,{opt:1});T("price","Price","price",c.price,790,690,220,70,34,2,"head",800,P,"c",{h:160})}
+  let y=808;const tw=c.price?690:960;
+  if(c.headline){const e=T("headline","Headline",c._hcf,c.headline,60,y,tw,84,52,2,"head",800,X,"l");y=e.y+e.h+14}
+  if(c.product){const e=T("product","Product name","product",c.product,60,y,tw,44,30,1,"body",700,X,"l",{fill:cr(P,X)>=4.5?P:rd(X)});y=e.y+e.h+12}
+  if(c.support)T("support","Supporting text","support",c.support,60,y,900,28,22,2,"body",500,X,"l");
+  cta("cta",60,1150,440,P,36);info(540,1170,480,"r",X);bar();
+ }else{const R=SPECS.find(x=>x.id===S.layout).R;
+  b.img("bg","Background",0,0,W,H,{kind:"bgimg",fit:"cover"});
+  logo(R.logo,true);
+  if(R.food)b.img("photo","Food photo",R.food[0],R.food[1],R.food[2],R.food[3],{kind:"food",shape:R.food[4]});
+  const t=(id,label,cf,txt,r,role,wt)=>T(id,label,cf,txt,r[0],r[1],r[2],r[3],r[4],r[5],role,wt,avg(r[0],r[1],r[2],r[3]*r[5]*1.1),r[6]);
+  if(c.headline)t("headline","Headline",c._hcf,c.headline,R.headline,"head",800);
+  if(c.product)t("product","Product name","product",c.product,R.product,"body",700);
+  if(c.support)t("support","Supporting text","support",c.support,R.support,"body",500);
+  if(c.price){const q=R.price,bx=q.box;if(q.circle)b.ell("priceBadge","Price badge",q.circle[0],q.circle[1],q.circle[2],P,{opt:1});else b.rect("priceBadge","Price badge",q.pill[0],q.pill[1],q.pill[2],q.pill[3],P,{rx:q.pill[3]/2,opt:1});
+   T("price","Price","price",c.price,bx[0],bx[1],bx[2],q.size,30,1,"head",800,P,"c",{h:bx[3]})}
+  if(c.offer)t("offer","Offer","offer",c.offer,R.offer,"body",700);
+  cta("cta",R.cta[0],R.cta[1],R.cta[2],X,34);
+  const i=R.info;info(i[0],i[1],i[2],i[5],avg(i[0],i[1],i[2],i[3]*i[4]*1.1),i[3],i[4]);bar();
+ }
+ return els;
+}
+/* ---------- drawing ---------- */
+const xe=s=>esc(s);
+function draw(e,forExport){
+ const o=O(e.id),dx=o.dx||0,dy=o.dy||0;let x=e.x,y=e.y,w=e.w,h=e.h,inner="";
+ if(e.k==="rect"||e.k==="img"){const dw=o.dw||0,dh=e.id==="logo"?dw:(o.dh||0);w+=dw;h+=dh}
+ if(e.k==="rect")inner=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${e.rx}" fill="${o.fill||e.fill}"/>`;
+ else if(e.k==="ell"){const r=w/2;inner=`<circle cx="${x+r}" cy="${y+r}" r="${r}" fill="${o.fill||e.fill}"/>`}
+ else if(e.k==="img"){const src=e.kind==="food"?S.food:e.kind==="bgimg"?bgData:B.logo,dim=e.kind==="food"?S.foodDim:e.kind==="bgimg"?bgDim:B.logoDim,clip=e.shape==="circle"?`<circle cx="${x+w/2}" cy="${y+h/2}" r="${w/2}"/>`:`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${e.shape==="round"?40:0}"/>`;
+  if(!src){if(forExport)return"";inner=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${e.shape==="circle"?w/2:8}" fill="${B.secondary}" fill-opacity=".1" stroke="${B.secondary}" stroke-opacity=".5" stroke-width="3" stroke-dasharray="14 10"/><text x="${x+w/2}" y="${y+h/2+8}" text-anchor="middle" font-family="Arial,sans-serif" font-size="${e.kind==="logo"?18:34}" fill="${B.secondary}" fill-opacity=".7">${e.kind==="logo"?"Logo":"Add food photo"}</text>`}
+  else{const fit=o.fit||e.fit||"cover",z=o.zoom||1,d=dim||[w,h],s=(fit==="cover"?Math.max:Math.min)(w/d[0],h/d[1])*z,w2=d[0]*s,h2=d[1]*s,ix=x+(w-w2)/2+(o.px||0)/100*Math.max(0,w2-w)/2,iy=y+(h-h2)/2+(o.py||0)/100*Math.max(0,h2-h)/2;
+   inner=`<clipPath id="cp-${e.id}">${clip}</clipPath><g clip-path="url(#cp-${e.id})"><image href="${src}" x="${ix}" y="${iy}" width="${w2}" height="${h2}" preserveAspectRatio="none"/></g>`}}
+ else{const ax=e.al==="l"?x:e.al==="r"?x+w:x+w/2,an=e.al==="l"?"start":e.al==="r"?"end":"middle";cv.font=`${e.wt} ${e.size}px ${e.font}`;const tw=Math.max(...e.lines.map(l=>cv.measureText(l).width),1);
+  x=e.al==="l"?x:e.al==="r"?x+w-tw:x+(w-tw)/2;w=Math.min(tw,e.w+(e.over?tw:0));
+  inner=`<text font-family='${e.font}' font-weight="${e.wt}" font-size="${e.size}" fill="${e.fill}" text-anchor="${an}">${e.lines.map((l,i)=>`<tspan x="${ax}" y="${e.y+e.size*.82+i*e.size*e.lh}">${xe(l)}</tspan>`).join("")}</text>`+(forExport?"":`<rect x="${x}" y="${e.y}" width="${w}" height="${h}" fill="transparent"/>`)}
+ e.bb={x:x+dx,y:y+dy,w,h};
+ return `<g data-id="${e.id}" transform="translate(${dx} ${dy})">${inner}</g>`;
+}
+function poster(forExport){
+ EL=build();let out="";const vis=EL.filter(e=>!O(e.id).hide);
+ vis.forEach(e=>{out+=draw(e,forExport)});EL.forEach(e=>{if(!e.bb)e.bb={x:e.x,y:e.y,w:e.w,h:e.h}});
+ const fcss=forExport?["head","body","script"].filter(r=>B.fonts&&B.fonts[r]&&B[r]).map(r=>`@font-face{font-family:"${B[r]}";src:url(${B.fonts[r].data})}`).join(""):"";
+ return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" ${forExport?`width="${W}" height="${H}"`:'id="ds-svg"'}>${fcss?`<defs><style>${fcss}</style></defs>`:""}${out}${forExport?"":ui()}</svg>`;
+}
+function ui(){const e=EL.find(x=>x.id===sel);if(!e||O(e.id).hide||!e.bb)return'<g id="ds-ui" pointer-events="none"><line id="ds-guide" x1="540" x2="540" y1="0" y2="1350" stroke="#e5484d" stroke-width="2" visibility="hidden"/></g>';
+ const b=e.bb;return `<g id="ds-ui" pointer-events="none"><rect id="ds-sel" x="${b.x-4}" y="${b.y-4}" width="${b.w+8}" height="${b.h+8}" fill="none" stroke="#1f6f55" stroke-width="4" stroke-dasharray="14 8"/><line id="ds-guide" x1="540" x2="540" y1="0" y2="1350" stroke="#e5484d" stroke-width="2" visibility="hidden"/></g>`}
+/* ---------- automatic layout checks ---------- */
+function check(){
+ const w=[],T=EL.filter(e=>e.k==="text"&&!O(e.id).hide),inter=(a,b)=>a.x<b.x+b.w-2&&b.x<a.x+a.w-2&&a.y<b.y+b.h-2&&b.y<a.y+a.h-2;
+ const c=norm();if(!c.headline&&!c.product)w.push(["warn","Add a headline or a product name so the poster has a main message."]);
+ ["head","body"].forEach(r=>{if(!(B.fonts&&B.fonts[r])&&!hasFont(B[r]))w.push(["warn",`${B[r]} isn't uploaded or installed, so a fallback font is being used. Ask your administrator to upload the font file.`])});
+ const nd=(c.dishes||[]).filter(d=>d.name||d.price).length;if(nd>1)w.push(["warn",`You entered ${nd} dishes but the poster shows only the first one.`]);
+ if(S.layout!=="hero"&&bgDim){if(Math.abs(bgDim[0]/bgDim[1]-.8)>.05)w.push(["warn","This background isn't 4:5, so it is cropped to fit (it is never stretched)."]);if(bgDim[0]<1000)w.push(["warn",`The background is only ${bgDim[0]}px wide and may look soft when exported at 1080 px.`])}
+ if(!S.food)w.push(["warn","No food photo yet. The photo area is only a placeholder and will be empty in the PNG."]);
+ T.forEach(e=>{const b=e.bb;
+  if(e.over)w.push(["error",`${e.label} doesn't fit its space even at the smallest allowed size. Shorten the text or lower the font size.`]);
+  if(b.x<0||b.y<0||b.x+b.w>W||b.y+b.h>H)w.push(["error",`${e.label} is partly outside the poster.`]);
+  else if(e.id!=="contactText"&&(b.x<32||b.y<32||b.x+b.w>W-32||b.y+b.h>H-32))w.push(["warn",`${e.label} is very close to the poster edge (under 32px margin).`]);
+  const bk={price:"priceBadge",offer:"offerPill",cta:"ctaBg"}[e.id],be=bk&&EL.find(x=>x.id===bk&&!O(bk).hide),bge=EL.find(x=>x.id==="bg");let bg=be?(O(bk).fill||be.fill):(e.on||B.bg);if(!be&&bge&&e.on===bge.fill&&O("bg").fill)bg=O("bg").fill;const r=cr(e.fill,bg),need=e.size>=48?3:4.5;if(!O(e.id).hide&&r<need)w.push(["warn",`${e.label} has low contrast (${r.toFixed(1)}:1). Pick a lighter or darker colour.`]);
+  if(e.size<22)w.push(["warn",`${e.label} is very small (${e.size}px) and may be hard to read on a phone.`]);
+  EL.forEach((i,ix)=>{if(i.k==="img"&&!O(i.id).hide&&EL.indexOf(e)<ix&&inter(b,i.bb))w.push(["error",`The ${i.label.toLowerCase()} covers the ${e.label.toLowerCase()}.`])})});
+ for(let i=0;i<T.length;i++)for(let j=i+1;j<T.length;j++)if(inter(T[i].bb,T[j].bb))w.push(["error",`${T[i].label} and ${T[j].label} overlap.`]);
+ return w;
+}
+/* ---------- state, saving, undo ---------- */
+const msg=(t,bad)=>{const m=$("ds-msg");if(m){m.textContent=t;m.className="ds-msg"+(bad?" bad":"")}};
+function save(){clearTimeout(saveT);saveT=setTimeout(async()=>{if(S.food&&!foodSaved){foodInJson=!(await idb("put","food:"+SLUG,S.food));foodSaved=true}try{const o=Object.assign({},S);if(!foodInJson)delete o.food;localStorage.setItem(KEY,JSON.stringify(o));const m=$("ds-msg");if(m&&!m.classList.contains("bad"))msg("Saved in this browser only (not in the cloud).")}catch(e){msg("Couldn't save: this browser's storage is full. Clear old site data (Ctrl+Shift+Delete), and export your PNG now so nothing is lost.",1)}},250)}
+function saveBrand(){if(!IS_ADMIN)return;
+ if(JSON.stringify(B).length>2000000){msg("The logo and fonts are too large to save together. Use smaller files (a .woff2 font is usually under 100 KB).",1);return}
+ try{localStorage.setItem(BKEY,JSON.stringify(B))}catch(e){}
+ try{if(DATA.brand){delete DATA.brand;window.save()}}catch(e){}
+ brandPush()}
+function snap(){const m=$("ds-msg");if(m&&m.classList.contains("bad")){m.textContent="";m.className="ds-msg"}const n=Date.now();if(n-lastSnap<700)return;lastSnap=n;undo.push(JSON.stringify({layout:S.layout,gen:S.gen,c:S.c,ov:S.ov}));if(undo.length>40)undo.shift()}
+const ensure=()=>S.ov[S.layout]||(S.ov[S.layout]={});
+/* ---------- rendering the studio ---------- */
+function renderPoster(){const box=$("ds-stage");if(!box)return;
+ if(!S.gen){box.innerHTML='<div class="ds-empty">Enter your poster content on the left, then press <b>Generate poster</b>.</div>';$("ds-warn").innerHTML="";return}
+ box.innerHTML=poster(false);warns=check();
+ $("ds-warn").innerHTML=warns.length?warns.map(w=>`<div class="ds-w ${w[0]}">${w[0]==="error"?"✖":"⚠"} ${esc(w[1])}</div>`).join(""):'<div class="ds-w ok">✓ No layout problems found.</div>';
+ document.querySelectorAll(".ds-lay").forEach(b=>b.classList.toggle("on",b.dataset.l===S.layout));
+}
+function renderPanel(){const p=$("ds-edit");if(!p)return;const e=EL.find(x=>x.id===sel);let h="";
+ const rg=(l,k,mn,mx,st,v)=>`<label>${l}<input type="range" min="${mn}" max="${mx}" step="${st}" value="${v}" oninput="DS.set('${sel}','${k}',+this.value)"></label>`;
+ if(!S.gen)h='<p class="ds-hint">Generate the poster, then click any part of it to edit.</p>';
+ else if(!e)h='<p class="ds-hint">Click any part of the poster, or pick an element from the list below. Drag to move.</p>';
+ else{const o=O(e.id);h=`<div class="ds-selhead"><b>${esc(e.label)}</b><button class="btn" onclick="DS.sel(null)">Deselect</button></div>`;
+  if(e.k==="text"){const fonts=[...new Set([B.head,B.body,B.script,"Arial","Georgia","Impact","Trebuchet MS","Courier New"])];
+   h+=`<label>Text<textarea rows="3" oninput="DS.txt('${e.id}',this.value)">${esc(e.txt)}</textarea></label>`+
+   `<label>Size: ${e.fixed?"fixed":"auto-fit"} <input type="range" min="16" max="220" step="2" value="${e.size}" oninput="DS.set('${e.id}','size',+this.value)"></label><button class="btn" onclick="DS.set('${e.id}','size',null);DS.panel()">Auto-fit size</button>`+
+   `<label>Colour <input type="color" value="${e.fill}" oninput="DS.set('${e.id}','fill',this.value)"></label>`+
+   `<label>Align <select onchange="DS.set('${e.id}','al',this.value)">${[["l","Left"],["c","Centre"],["r","Right"]].map(a=>`<option value="${a[0]}" ${e.al===a[0]?"selected":""}>${a[1]}</option>`).join("")}</select></label>`+
+   `<label>Font <select onchange="DS.set('${e.id}','font',this.value)">${fonts.map(f=>`<option ${(o.font||FONT[e.role]())===f?"selected":""}>${esc(f)}</option>`).join("")}</select></label>`+
+   `<label>Weight <select onchange="DS.set('${e.id}','wt',+this.value)">${[[400,"Regular"],[600,"Semi-bold"],[700,"Bold"],[900,"Black"]].map(a=>`<option value="${a[0]}" ${e.wt==a[0]?"selected":""}>${a[1]}</option>`).join("")}</select></label>`}
+  else if(e.k==="img"){h+=(e.kind==="bgimg"?"":`<label class="btn ds-up">Replace ${e.kind==="food"?"food photo":"logo"}<input type="file" accept="image/*" hidden onchange="DS.${e.kind==="food"?"food":"logo"}(this)"></label>`)+
+   `<label>Fit <select onchange="DS.set('${e.id}','fit',this.value)"><option value="cover" ${(o.fit||e.fit||"cover")==="cover"?"selected":""}>Fill (crop)</option><option value="contain" ${(o.fit||e.fit)==="contain"?"selected":""}>Fit whole image</option></select></label>`+
+   rg("Zoom","zoom",1,3,.05,o.zoom||1)+rg("Move image left/right","px",-100,100,2,o.px||0)+rg("Move image up/down","py",-100,100,2,o.py||0)+(e.kind==="logo"?rg("Logo size","dw",-60,160,2,o.dw||0):"")}
+  else{h+=`<label>Colour <input type="color" value="${o.fill||e.fill}" oninput="DS.set('${e.id}','fill',this.value)"></label>`+(e.k==="rect"&&e.id!=="bg"?rg("Width","dw",-400,400,4,o.dw||0)+rg("Height","dh",-400,400,4,o.dh||0):"")}
+  if(e.id!=="bg")h+=rg("Move left/right","dx",-500,500,2,o.dx||0)+rg("Move up/down","dy",-500,500,2,o.dy||0);
+  if(e.opt)h+=`<label class="ds-chk"><input type="checkbox" ${o.hide?"":"checked"} onchange="DS.set('${e.id}','hide',this.checked?null:true);DS.panel()"> Show this element</label>`;
+  h+=`<button class="btn" onclick="DS.resetEl('${e.id}')">Reset this element</button>`}
+ if(S.gen)h+=`<div class="ds-layers"><b>All elements</b>${EL.map(x=>`<button class="${x.id===sel?"on":""}" onclick="DS.sel('${x.id}')">${esc(x.label)}${O(x.id).hide?" (hidden)":""}</button>`).join("")}</div>`;
+ p.innerHTML=h;
+}
+function renderBrand(){const p=$("ds-brand");if(!p)return;const f=(k,l)=>`<label>${l}<input value="${esc(B[k])}" oninput="DS.brand('${k}',this.value)"></label>`;
+ const fr=(r,l)=>{const u=B.fonts&&B.fonts[r];return f(r,l+" (family name)")+(u?`<small class="ok">✓ Font file uploaded: ${esc(u.file)} · <a href="#" onclick="DS.fontRemove('${r}');return false">remove</a></small>`:(hasFont(B[r])?'<small class="ok">✓ installed on this computer</small>':'<small class="bad">No font file yet, so a fallback font is used. Upload it below.</small>'))+`<label class="btn ds-up">Upload ${l.toLowerCase()} file<input type="file" accept=".woff2,.woff,.ttf,.otf" hidden onchange="DS.font('${r}',this)"></label>`};
+ if(!IS_ADMIN){p.innerHTML="";return}
+ p.innerHTML=f("name","Restaurant name")+f("category","Business category")+`<div class="ds-3"><label>Primary<input type="color" value="${B.primary}" oninput="DS.brand('primary',this.value)"></label><label>Secondary<input type="color" value="${B.secondary}" oninput="DS.brand('secondary',this.value)"></label><label>Background<input type="color" value="${B.bg}" oninput="DS.brand('bg',this.value)"></label></div>`+
+ fr("head","Headline font")+fr("body","Body font (prices, offers, buttons)")+fr("script","Supporting font (optional)")+
+ `<label class="btn ds-up">${B.logo?"Replace logo":"Upload logo"}<input type="file" accept="image/*" hidden onchange="DS.logo(this)"></label>`+
+ `<label>Logo placement <select onchange="DS.brand('logoPos',this.value)">${[["auto","Automatic (per layout)"],["top-left","Top left"],["top-right","Top right"]].map(a=>`<option value="${a[0]}" ${B.logoPos===a[0]?"selected":""}>${a[1]}</option>`).join("")}</select></label>`+
+ `<label>Logo width: ${B.logoPct}% of poster <input type="range" min="5" max="14" step="1" value="${B.logoPct}" oninput="DS.brand('logoPct',+this.value);this.parentNode.firstChild.textContent='Logo width: '+this.value+'% of poster '"></label>`+
+ f("contactBar","Contact bar text (shown exactly as typed)")+f("location","Location")+f("tagline","Tagline (not placed on posters automatically)")+f("voice","Brand personality (notes only)")+f("tone","Communication tone (notes only)")+`<label>Brand guidelines / extra rules (notes only, not enforced)<textarea rows="3" oninput="DS.brand('guidelines',this.value)">${esc(B.guidelines)}</textarea></label>`+
+ `<button class="btn" onclick="DS.presetReset()">Reset to KWK Kitchen preset</button>`;
+}
+function renderForm(){const fed=!!S.src,fl=fed?[["support","Supporting text (optional)","ta"]]:[["product","Product or dish name"],["price","Price"],["offer","Offer or promotion (optional)"],["headline","Headline or hook"],["support","Supporting text (optional)","ta"],["cta","Call to action (blank = “Order now”)"],["contact","Contact info (optional)"],["location","Restaurant location (optional)"]];
+ $("ds-form").innerHTML=fl.map(f=>`<label>${f[1]}${f[2]?`<textarea id="f-${f[0]}" rows="2" oninput="DS.field('${f[0]}',this.value)">${esc(S.c[f[0]])}</textarea>`:`<input id="f-${f[0]}" value="${esc(S.c[f[0]])}" oninput="DS.field('${f[0]}',this.value)">`}</label>`).join("")+
+ `<label class="ds-chk"><input type="checkbox" id="f-bar" ${S.c.bar?"checked":""} onchange="DS.field('bar',this.checked)"> Show contact bar at the bottom</label>`;
+ $("ds-foodthumb").innerHTML=S.food?`<img src="${S.food}" alt="Food photo thumbnail"> Photo added`:"No photo yet";
+}
+function shell(){const r=S.src;return (r?`<button class="back" onclick="DS.back()">← Back to ${esc(r.label)}</button><div class="ds-src">Poster details came from your selections on this page: dish, price, offer, headline and call to action.${S.c.dishes&&S.c.dishes.length>1?` You entered ${S.c.dishes.length} dishes; the poster shows the first one.`:""} Click any text on the poster to reword it.</div>`:`<button class="back" onclick="home()">← Back to dashboard</button>`)+`
+<div class="head"><div><div class="eyebrow">Design Studio</div><h2>Restaurant product promotion</h2><p>Enter content → generate → click parts of the poster to edit → export PNG.</p></div></div>
+<div class="ds">`+`
+<div class="ds-col"><h3>${r?"1. Photo & extras":"1. Poster content"}</h3>${r?`<p class="ds-hint">Headline, price, offer and call to action were set on the previous page. To reword anything, click it on the poster. To change the dish or price, go back.</p>`:`<div class="field"><label>Poster type<select><option>Restaurant Product Promotion</option></select></label></div>`}<div id="ds-form"></div>
+<label class="btn ds-up">Upload food photo<input type="file" accept="image/*" hidden onchange="DS.food(this)"></label><div id="ds-foodthumb" class="ds-thumb"></div><div id="ds-bg" class="ds-bgs"></div>
+${r?"":`<button class="btn primary ds-gen" onclick="DS.gen()">Generate poster</button>`}
+<p class="ds-hint">Brand: <b id="ds-bn"></b>${IS_ADMIN?". Edit it under 🏷️ Brand Profile on the dashboard.":". Set by your administrator."}</p></div>
+<div class="ds-mid"><div class="ds-bar"><b>Your poster</b>
+<div class="ds-acts"><button class="btn" onclick="DS.undo()">Undo</button><button class="btn" onclick="DS.restore()">Restore layout</button><button class="btn primary" onclick="DS.export()">Export PNG</button></div></div>
+<div id="ds-stage"></div><div id="ds-warn"></div><div id="ds-msg" class="ds-msg"></div></div>
+<div class="ds-col"><h3>2. Edit selected element</h3><div id="ds-edit"></div></div></div>`}
+const CSS=`.ds{display:grid;grid-template-columns:290px minmax(0,1fr) 290px;gap:16px;width:min(1500px,calc(100vw - 40px));position:relative;left:50%;transform:translateX(-50%);margin-top:14px;align-items:start}
+.ds-col{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;max-height:calc(100vh - 40px);overflow:auto;position:sticky;top:12px}.ds-col h3{margin:0 0 10px;font-size:16px}
+.ds label{display:block;font-size:12px;font-weight:700;margin:9px 0 0;color:var(--ink)}.ds input:not([type=range]):not([type=color]):not([type=checkbox]),.ds textarea,.ds select{display:block;width:100%;margin-top:4px;padding:9px;border:1px solid var(--line);border-radius:9px;font-size:13px;background:#fff}
+.ds input[type=range]{width:100%;margin-top:4px}.ds input[type=color]{display:block;width:100%;height:34px;margin-top:4px;border:1px solid var(--line);border-radius:8px;padding:2px}.ds .btn{margin-top:10px}.ds-up{cursor:pointer;text-align:center;display:block}.ds input[type=file]{display:none!important}
+.ds-chk{display:flex!important;gap:8px;align-items:center}.ds-chk input{width:auto!important;margin:0!important}.ds-gen{width:100%;padding:13px}.ds details{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}.ds summary{cursor:pointer;font-weight:800;font-size:13px}
+.ds-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.ds small{display:block;font-size:11px;margin-top:3px}.ds small.ok{color:#2a7a45}.ds small.bad{color:#b45309}
+.ds-thumb{font-size:12px;color:var(--muted);margin-top:6px;display:flex;align-items:center;gap:8px}.ds-thumb img{width:44px;height:44px;object-fit:cover;border-radius:8px}
+.ds-bar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px}.ds-lays{display:flex;gap:4px;background:#f0f3f0;padding:4px;border-radius:12px}.ds-lay{border:0;background:transparent;padding:9px 14px;border-radius:9px;font-weight:800;cursor:pointer;color:var(--muted)}.ds-lay.on{background:var(--ink);color:#fff}
+.ds-acts{display:flex;gap:6px}.ds-acts .btn{margin:0}#ds-stage{display:flex;justify-content:center;background:#e9ece9;border-radius:12px;padding:12px}#ds-svg{height:min(calc(100vh - 190px),920px);width:auto;aspect-ratio:1080/1350;max-width:100%;background:#fff;box-shadow:0 2px 14px rgba(0,0,0,.18);cursor:default;touch-action:none}#ds-svg [data-id]{cursor:move}#ds-svg [data-id="bg"]{cursor:pointer}
+.ds-empty{padding:90px 30px;text-align:center;color:var(--muted);max-width:360px;line-height:1.6}.ds-w{font-size:13px;padding:8px 11px;border-radius:9px;margin-top:6px;line-height:1.4}.ds-w.error{background:#fdecec;color:#9b1c1c}.ds-w.warn{background:#fff6e0;color:#8a5a00}.ds-w.ok{background:#eef7f0;color:#2a7a45}
+.ds-msg{font-size:12px;color:var(--muted);margin-top:8px}.ds-msg.bad{color:#b42318;font-weight:700}.ds-hint{font-size:13px;color:var(--muted);line-height:1.5}.ds-selhead{display:flex;justify-content:space-between;align-items:center}.ds-selhead .btn{margin:0;padding:6px 10px}
+.ds-layers{margin-top:16px;border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:4px;font-size:12px}.ds-layers button{text-align:left;border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 9px;cursor:pointer}.ds-layers button.on{border-color:var(--accent);background:#eef7f0}
+.ds-src{margin:10px 0 0;padding:10px 14px;background:#eef7f0;border:1px solid #cfe5d4;border-radius:10px;font-size:13px;line-height:1.5}
+.ds-bggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:6px}.ds-bgs .ds-bggrid{grid-template-columns:repeat(2,1fr)}.ds-bgt{position:relative;border:2px solid var(--line);background:#fff;border-radius:10px;padding:0;cursor:pointer;overflow:hidden;text-align:left}.ds-bgt.on{border-color:var(--accent)}.ds-bgt img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}.ds-bgt span{display:block;font-size:11px;padding:5px 7px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-bgt i{position:absolute;top:6px;left:6px;font-style:normal;font-size:10px;font-weight:800;background:#fff;border-radius:6px;padding:2px 6px}.ds-nobg{width:100%}.ds-nobg.on{border-color:var(--accent)}.ds-bgprev{width:100%;max-height:260px;object-fit:contain;background:#eee;border-radius:10px}.ds-chips{display:flex;flex-wrap:wrap;gap:4px}.ds-chip{display:flex!important;align-items:center;gap:4px;margin:0!important;font-weight:600!important;border:1px solid var(--line);border-radius:999px;padding:3px 9px}.ds-chip input{width:auto!important;margin:0!important}.ds fieldset{border:1px solid var(--line);border-radius:10px;margin:10px 0 0;padding:6px 10px 10px}.ds legend{font-size:12px;font-weight:800;padding:0 4px}
+@media(max-width:1100px){.ds{grid-template-columns:1fr;left:0;transform:none;width:100%}.ds-col{position:static;max-height:none}#ds-svg{height:auto;width:100%}}`;
+/* ---------- public actions used by the page ---------- */
+const api=window.DS={
+ open(arg){B=Object.assign({},PRESET,brandFromData()||rd0(BKEY)||{});brandPull().then(()=>loadFonts()).then(()=>{const n=$("ds-bn");if(n)n.textContent=B.name;renderPoster();renderPanel()});if(!S.food)idb("get","food:"+SLUG).then(v=>{if(v&&!S.food){S.food=v;foodSaved=true;if($("ds-form")){renderForm();renderPoster()}}});if(arg&&arg.type){S.src=null;S.c.dishes=[]}if(!$("ds-css")){const s=document.createElement("style");s.id="ds-css";s.textContent=CSS;document.head.appendChild(s)}
+  $("app").innerHTML=shell();sel=null;renderForm();renderBrand();$("ds-bn").textContent=B.name;renderPoster();renderPanel();renderBgPicker();bind();bgPull().then(async()=>{if(S.bg&&!bgData&&!(await bgActivate(S.bg))){S.bg=null;S.layout="hero"}renderBgPicker();renderPoster()});window.scrollTo(0,0)},
+ field(k,v){snap();S.c[k]=v;save();renderPoster();if(sel)renderPanel()},
+ gen(){const c=norm();if(!c.headline&&!c.product){msg("Add a product name or a headline first.",1);return}
+  if(S.gen&&Object.values(S.ov).some(o=>Object.keys(o).length)&&!confirm("Generating again will reset your element edits on all layouts (your content stays). Continue?"))return;
+  snap();S.gen=true;S.ov={};sel=null;save();renderPoster();renderPanel();msg("Poster generated. Click any part of it to edit.")},
+ layout(l){snap();S.layout=l;sel=null;save();renderPoster();renderPanel()},
+ sel(id){sel=id;renderPoster();renderPanel()},
+ set(id,k,v){snap();const o=ensure();o[id]=o[id]||{};if(v===null||v===undefined||v==="")delete o[id][k];else o[id][k]=v;save();renderPoster();if(k==="size"||k==="al"||k==="wt"||k==="font")renderPanel_soft()},
+ txt(id,v){const e=EL.find(x=>x.id===id);snap();if(e&&e.cf){S.c[e.cf]=v;const i=$("f-"+e.cf);if(i)i.value=v}else{const o=ensure();o[id]=o[id]||{};o[id].txt=v}save();renderPoster()},
+ resetEl(id){snap();delete ensure()[id];save();renderPoster();renderPanel()},
+ restore(){snap();S.ov[S.layout]={};sel=null;save();renderPoster();renderPanel();msg("This layout is back to its original arrangement.")},
+ undo(){const s=undo.pop();if(!s){msg("Nothing to undo.");return}Object.assign(S,JSON.parse(s));lastSnap=0;renderForm();save();renderPoster();renderPanel();msg("Undid the last change. (Photo and logo replacements can't be undone.)")},
+ panel(){renderPanel()},
+ async food(inp){try{const r=await readImg(inp.files[0],1400,false);S.food=r.src;S.foodDim=r.dim;foodSaved=false;foodInJson=false;save();renderForm();renderPoster();renderPanel()}catch(e){msg(e.message,1)}inp.value=""},
+ async logo(inp){if(!IS_ADMIN)return;try{const r=await readImg(inp.files[0],500,true);B.logo=r.src;B.logoDim=r.dim;saveBrand();renderBrand();renderPoster();renderPanel()}catch(e){msg(e.message,1)}inp.value=""},
+ brand(k,v){if(!IS_ADMIN)return;B[k]=v;saveBrand();if(k==="name"&&$("ds-bn"))$("ds-bn").textContent=v;if(["head","body","script"].includes(k)){renderBrand_soft();loadFonts().then(renderPoster)}renderPoster();if(sel)renderPanel_soft()},
+ presetReset(){if(!IS_ADMIN)return;if(!confirm("Replace the brand profile with the KWK Kitchen preset? Your logo stays."))return;const l=B.logo,d=B.logoDim;B=Object.assign({},PRESET,{logo:l,logoDim:d});saveBrand();renderBrand();renderPoster()},
+ openBrand(){if(!IS_ADMIN)return;if(!$("ds-css")){const st=document.createElement("style");st.id="ds-css";st.textContent=CSS;document.head.appendChild(st)}
+  B=Object.assign({},PRESET,brandFromData()||rd0(BKEY)||{});sel=null;brandPull().then(()=>loadFonts()).then(()=>{renderBrand();renderPoster()});
+  $("app").innerHTML=`<button class="back" onclick="home()">← Back to dashboard</button><div class="head"><div><div class="eyebrow">Admin</div><h2>Brand profile</h2><p>Saved with this restaurant's data. Staff and owners use it but cannot change it. Fonts, colours and logo are drawn on every poster.</p></div></div><div class="ds" style="grid-template-columns:340px minmax(0,1fr)"><div class="ds-col"><div id="ds-brand"></div><div id="ds-msg" class="ds-msg"></div></div><div><div id="ds-stage"></div><div id="ds-warn"></div><p class="ds-hint">Preview uses your last generated poster. Generate one from any approach page to see colour or font changes here.</p></div></div>`;
+  renderBrand();renderPoster()},
+ openBackgrounds(){if(!IS_ADMIN)return;ensureCss();B=Object.assign({},PRESET,brandFromData()||rd0(BKEY)||{});
+  $("app").innerHTML=`<button class="back" onclick="home()">← Back to dashboard</button><div class="head"><div><div class="eyebrow">Admin</div><h2>Background library</h2><p>Upload approved backgrounds, then set where text and food can go. Staff only see backgrounds marked Approved.</p></div></div><div class="ds" style="grid-template-columns:minmax(0,1fr) 380px"><div class="ds-col" style="max-height:none;position:static"><div class="ds-bar"><label class="btn primary ds-up" style="margin:0">⬆ Upload backgrounds<input type="file" accept="image/*" multiple hidden onchange="DS.bgUpload(this)"></label><select onchange="DS.bgFilter(this.value)"><option value="all">All</option><option>draft</option><option>approved</option><option>rejected</option></select></div><p id="bg-count" class="ds-hint"></p><div id="bg-grid" class="ds-bggrid"></div><div id="ds-msg" class="ds-msg"></div></div><div class="ds-col"><h3>Details</h3><div id="bg-edit"></div></div></div>`;
+  bgGrid();bgEditor();Promise.all([brandPull(),bgPull()]).then(()=>{bgGrid();bgEditor()})},
+ async bgUpload(inp){if(!IS_ADMIN)return;const fs=[...inp.files].filter(f=>/^image\//.test(f.type));inp.value="";if(!fs.length){msg("Please choose image files (JPG, PNG or WebP).",1);return}let n=0,bad=0;
+  for(const f of fs){msg(`Uploading ${++n} of ${fs.length}…`);try{const full=await readImg(f,1600,false,.82),th=await readImg(f,240,false,.7),num=Math.max(0,...BG.map(g=>+g.id.slice(3)||0))+1,id="bg-"+String(num).padStart(3,"0");
+   await idb("put","bg:"+id,full.src);bgMem[id]=full.src;if(!(await cloudPut(SLUG+"__bg__"+id,{img:full.src})))bad++;
+   BG.push({id,name:f.name.replace(/\.[^.]+$/,""),status:"draft",brand:B.name,style:"",food:"",categories:[],approaches:[],textSafe:[],layouts:[],thumb:th.src,w:full.dim[0],h:full.dim[1]});bgSelId=id}catch(e){bad++}}
+  bgPush();bgGrid();bgEditor();msg(bad?`${fs.length-bad} uploaded; ${bad} failed or did not reach the cloud.`:`${fs.length} uploaded as Draft. Set the details, then mark each one Approved.`,!!bad)},
+ async bgReplace(id,inp){if(!IS_ADMIN)return;const f=inp.files[0];inp.value="";const g=BG.find(x=>x.id===id);if(!f||!g)return;try{const full=await readImg(f,1600,false,.82),th=await readImg(f,240,false,.7);
+  await idb("put","bg:"+id,full.src);bgMem[id]=full.src;await cloudPut(SLUG+"__bg__"+id,{img:full.src});g.thumb=th.src;g.w=full.dim[0];g.h=full.dim[1];bgPush();bgGrid();bgEditor()}catch(e){msg(e.message,1)}},
+ bgSel(id){bgSelId=id;bgGrid();bgEditor()},bgFilter(v){bgFilter=v;bgGrid()},
+ bgSet(id,k,v){const g=BG.find(x=>x.id===id);if(!g)return;g[k]=v;bgPush();if(k==="status"||k==="name")bgGrid()},
+ bgTog(id,k,v,on){const g=BG.find(x=>x.id===id);if(!g)return;g[k]=on?[...new Set([...g[k],v])]:g[k].filter(x=>x!==v);bgPush()},
+ bgDel(id){if(!IS_ADMIN||!confirm("Delete this background? Posters that use it fall back to the plain brand colour."))return;BG=BG.filter(g=>g.id!==id);delete bgMem[id];idb("del","bg:"+id);cloudDel(SLUG+"__bg__"+id);bgSelId=null;bgPush();bgGrid();bgEditor()},
+ async pickBg(id){if(!id){snap();S.bg=null;S.layout="hero";bgData="";bgDim=null;bgCv=null;save();renderBgPicker();renderPoster();renderPanel();return}
+  const g=BG.find(x=>x.id===id),L=g?layoutsFor(g):[];if(!L.length){msg("This background has no compatible layout saved. Ask your administrator to pick one.",1);return}
+  msg("Loading background…");if(!(await bgActivate(id))){msg("Couldn't load that background image.",1);return}
+  snap();S.bg=id;S.layout=L[0].id;sel=null;save();renderBgPicker();renderPoster();renderPanel();msg("Background applied.")},
+ setLayout(id){snap();S.layout=id;sel=null;save();renderBgPicker();renderPoster();renderPanel()},
+ async font(role,inp){if(!IS_ADMIN)return;const f=inp.files[0];inp.value="";if(!f)return;
+  try{if(!/\.(woff2?|ttf|otf)$/i.test(f.name))throw Error("Please choose a .woff2, .woff, .ttf or .otf font file.");
+   if(f.size>400000)throw Error("That font file is over 400 KB. Use the .woff2 version, which is usually much smaller.");
+   const data=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>no(Error("Couldn't read that file."));r.readAsDataURL(f)});
+   try{await new FontFace("chk"+Date.now(),`url(${data})`).load()}catch(e){throw Error("That file isn't a valid font.")}
+   B.fonts=Object.assign({},B.fonts,{[role]:{file:f.name,data}});saveBrand();await loadFonts();renderBrand();renderPoster()}catch(e){msg(e.message,1)}},
+ async fontRemove(role){if(!IS_ADMIN)return;const n=Object.assign({},B.fonts);delete n[role];B.fonts=n;saveBrand();await loadFonts();renderBrand();renderPoster()},
+ deselect(){api.sel(null)},
+ async export(){try{if(!S.gen)throw Error("Generate the poster first.");const errs=warns.filter(w=>w[0]==="error");if(errs.length&&!confirm("The poster has layout problems:\n\n• "+errs.map(w=>w[1]).join("\n• ")+"\n\nExport anyway?"))return;
+  const url=URL.createObjectURL(new Blob([poster(true)],{type:"image/svg+xml;charset=utf-8"}));
+  const img=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(Error("The browser could not draw the poster. A very large image may be the cause. Try a smaller photo."));i.src=url});
+  await new Promise(r=>setTimeout(r,300));const cn=document.createElement("canvas");cn.width=W;cn.height=H;cn.getContext("2d").drawImage(img,0,0,W,H);URL.revokeObjectURL(url);
+  const blob=await new Promise(r=>cn.toBlob(r,"image/png"));if(!blob)throw Error("PNG creation failed.");
+  const a=document.createElement("a"),nm=(B.name||"restaurant").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");a.href=URL.createObjectURL(blob);a.download=`${nm}-product-promotion.png`;document.body.appendChild(a);a.click();a.remove();msg(`Exported ${a.download} (${W}×${H}).`)}catch(e){msg("Export failed: "+e.message,1)}},
+ feed(ci,ii,gi,ai){
+  current={cat:ci,item:ii,group:gi,approach:ai};const c=DATA.categories[ci],it=c.items[ii],a=currentApproach();
+  const hl=selectedDesignHeadline(),cta=selectedDesignCTA();let name="",price="",offer="",extra=0,contact="",loc="",dl=[];
+  if(c.needsOfferFields){const off=currentLiveOffer(),ds=off.items.filter(d=>d.name||d.price);if(ds[0]){name=ds[0].name||"";price=ds[0].price||""}dl=ds.map(d=>({name:d.name||"",price:d.price||""}));extra=0;offer=off.offer||""}
+  if(typeof FACTS!=="undefined"&&FACTS[it.id]){contact=getFact(it.id,"phone").trim();loc=getFact(it.id,"address").trim()}
+  Object.assign(S.c,{product:name,price,offer,headline:hl,cta,contact,location:loc,dishes:dl});if(!S.bg)S.layout="hero";
+  S.src={ci,ii,gi,ai,extra,catName:c.name,appName:(DATA.approachGroups[gi]&&DATA.approachGroups[gi].approaches[ai])||"",label:`${a.name} (${it.name})`};S.gen=!!(hl||name);save();api.open()},
+ back(){const r=S.src;try{openApproach(r.ci,r.ii,r.gi,r.ai)}catch(e){home()}},
+ debug:()=>({S,B,EL,warns})
+};
+/* panels that must not steal focus while typing: only update labels that matter */
+function renderPanel_soft(){const a=document.activeElement;if(a&&a.closest&&a.closest("#ds-edit")&&a.tagName!=="SELECT")return;renderPanel()}
+function renderBrand_soft(){const a=document.activeElement;if(a&&a.tagName==="INPUT"&&a.closest("#ds-brand"))return;renderBrand()}
+function readImg(f,max,png,q){return new Promise((res,rej)=>{if(!f)return rej(Error("No file chosen."));if(!/^image\//.test(f.type))return rej(Error("Please choose an image file (JPG, PNG or WebP)."));
+ const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{const s=Math.min(1,max/Math.max(i.width,i.height)),w=Math.round(i.width*s),h=Math.round(i.height*s),c=document.createElement("canvas");c.width=w;c.height=h;const g=c.getContext("2d");if(!png){g.fillStyle="#fff";g.fillRect(0,0,w,h)}g.drawImage(i,0,0,w,h);URL.revokeObjectURL(u);res({src:c.toDataURL(png?"image/png":"image/jpeg",q||.85),dim:[w,h]})};
+ i.onerror=()=>{URL.revokeObjectURL(u);rej(Error("That image couldn't be read. Try a JPG or PNG."))};i.src=u})}
+/* ---------- selecting and dragging on the poster ---------- */
+function bind(){const st=$("ds-stage");
+ st.addEventListener("pointerdown",ev=>{const g=ev.target.closest&&ev.target.closest("[data-id]");if(!g)return;const id=g.dataset.id,e=EL.find(x=>x.id===id);if(!e)return;
+  if(sel!==id){sel=id;renderPoster();renderPanel()}if(id==="bg")return;const ng=st.querySelector(`[data-id="${id}"]`),o=O(id);
+  drag={id,g:ng,sx:ev.clientX,sy:ev.clientY,dx0:o.dx||0,dy0:o.dy||0,moved:false,bb:Object.assign({},e.bb)};try{st.setPointerCapture(ev.pointerId)}catch(x){}});
+ st.addEventListener("pointermove",ev=>{if(!drag)return;const svg=$("ds-svg");if(!svg)return;const k=W/svg.getBoundingClientRect().width;
+  if(!drag.moved&&Math.hypot(ev.clientX-drag.sx,ev.clientY-drag.sy)<5)return;if(!drag.moved){snap();drag.moved=true}
+  const bx=drag.bb.x-drag.dx0,by=drag.bb.y-drag.dy0,bw=drag.bb.w,bh=drag.bb.h;let dx=drag.dx0+(ev.clientX-drag.sx)*k,dy=drag.dy0+(ev.clientY-drag.sy)*k;
+  dx=Math.max(-bx,Math.min(W-bw-bx,dx));dy=Math.max(-by,Math.min(H-bh-by,dy));
+  const snapped=Math.abs(bx+dx+bw/2-540)<10;if(snapped)dx=540-bw/2-bx;
+  dx=Math.round(dx);dy=Math.round(dy);drag.g.setAttribute("transform",`translate(${dx} ${dy})`);drag.cur=[dx,dy];
+  const r=$("ds-sel"),gd=$("ds-guide");if(r){r.setAttribute("x",bx+dx-4);r.setAttribute("y",by+dy-4)}if(gd)gd.setAttribute("visibility",snapped?"visible":"hidden")});
+ const end=()=>{if(!drag)return;const d=drag;drag=null;if(d.moved&&d.cur){const o=ensure();o[d.id]=o[d.id]||{};o[d.id].dx=d.cur[0];o[d.id].dy=d.cur[1];save();renderPoster();renderPanel()}};
+ st.addEventListener("pointerup",end);st.addEventListener("pointercancel",end);
+ document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&$("ds-stage")&&sel){api.sel(null)}});
+}
+/* ---------- entry point: button in the dashboard's top bar (admin only, like editing) ---------- */
+const tb=document.getElementById("topBtns");
+{const b=document.createElement("button");b.className="btn";b.textContent="🎨 Design Studio";b.onclick=api.open;
+if(tb&&IS_ADMIN){tb.insertBefore(b,tb.firstChild);const bb=document.createElement("button");bb.className="btn";bb.textContent="🏷️ Brand Profile";bb.onclick=api.openBrand;tb.insertBefore(bb,tb.firstChild);const bk=document.createElement("button");bk.className="btn";bk.textContent="🖼️ Backgrounds";bk.onclick=api.openBackgrounds;tb.insertBefore(bk,tb.firstChild)}
+else if(location.protocol==="file:"){const top=document.querySelector(".top");if(top)top.insertBefore(b,document.getElementById("clientBadge"))}}
+})();
+</script>
+
+</body>
+</html>
